@@ -5,210 +5,329 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Support - Send a Message</title>
   <link rel="preconnect" href="https://fonts.googleapis.com">
-  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Quicksand:wght@400;500;600;700&family=Nunito:wght@400;600;700&display=swap" rel="stylesheet">
   <style>
     * { box-sizing: border-box; margin: 0; padding: 0; }
+
+    :root {
+      --bg: #1a1a2e;
+      --bg-soft: #232342;
+      --card: #2a2a4a;
+      --accent: #5fb9b0;
+      --accent-light: #7dd3cb;
+      --gold: #e8c87a;
+      --pink: #e8a0bf;
+      --purple: #a78bfa;
+      --text: #f0f0f5;
+      --text-soft: #a0a0b5;
+    }
+
     body {
-      font-family: 'Inter', -apple-system, sans-serif;
-      background: #0a0a0f;
+      font-family: 'Nunito', sans-serif;
+      background: var(--bg);
+      color: var(--text);
       min-height: 100vh;
       display: flex;
       align-items: center;
       justify-content: center;
-      padding: 2rem;
-      color: #fff;
+      padding: 1.5rem;
     }
+
     .bg-glow {
       position: fixed;
       inset: 0;
-      background: radial-gradient(ellipse at 20% 20%, rgba(102, 126, 234, 0.15) 0%, transparent 50%),
-                  radial-gradient(ellipse at 80% 80%, rgba(118, 75, 162, 0.15) 0%, transparent 50%);
+      background:
+        radial-gradient(ellipse at 30% 30%, rgba(95, 185, 176, 0.12) 0%, transparent 50%),
+        radial-gradient(ellipse at 70% 70%, rgba(167, 139, 250, 0.1) 0%, transparent 50%);
       pointer-events: none;
-      z-index: 0;
     }
-    .container { width: 100%; max-width: 480px; position: relative; z-index: 1; }
+
+    .deco {
+      position: fixed;
+      pointer-events: none;
+      opacity: 0.15;
+      font-size: 2rem;
+    }
+    .deco-1 { top: 10%; left: 5%; animation: float 5s infinite; }
+    .deco-2 { bottom: 15%; right: 8%; animation: float 6s infinite 1s; }
+    @keyframes float {
+      0%, 100% { transform: translateY(0); }
+      50% { transform: translateY(-15px); }
+    }
+
     .card {
-      background: rgba(255, 255, 255, 0.05);
-      backdrop-filter: blur(20px);
-      border: 1px solid rgba(255, 255, 255, 0.1);
+      width: 100%;
+      max-width: 480px;
+      background: var(--card);
+      border: 1px solid rgba(255,255,255,0.08);
       border-radius: 24px;
-      padding: 2.5rem;
-      box-shadow: 0 25px 50px rgba(0, 0, 0, 0.3);
+      padding: 2rem;
+      position: relative;
+      z-index: 1;
     }
-    .logo { text-align: center; margin-bottom: 2rem; }
+
+    .logo {
+      text-align: center;
+      margin-bottom: 1.5rem;
+    }
+
     .logo-icon {
-      width: 64px;
-      height: 64px;
-      background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-      border-radius: 16px;
+      width: 60px;
+      height: 60px;
+      background: linear-gradient(135deg, var(--accent) 0%, var(--accent-light) 100%);
+      border-radius: 50%;
       display: inline-flex;
       align-items: center;
       justify-content: center;
+      font-size: 1.8rem;
       margin-bottom: 1rem;
-      font-size: 2rem;
+      box-shadow: 0 4px 20px rgba(95, 185, 176, 0.3);
     }
-    .logo h1 { font-size: 1.75rem; font-weight: 700; letter-spacing: -0.02em; margin-bottom: 0.25rem; }
-    .logo p { color: rgba(255, 255, 255, 0.6); font-size: 0.875rem; }
-    .form-group { margin-bottom: 1.25rem; }
+
+    .logo h1 {
+      font-family: 'Quicksand', sans-serif;
+      font-size: 1.5rem;
+      font-weight: 700;
+      color: var(--text);
+      margin-bottom: 0.3rem;
+    }
+
+    .logo p {
+      font-size: 0.85rem;
+      color: var(--text-soft);
+    }
+
+    .form-group {
+      margin-bottom: 1.2rem;
+    }
+
     .form-group label {
       display: block;
       font-size: 0.75rem;
       font-weight: 600;
-      text-transform: uppercase;
-      letter-spacing: 0.05em;
-      color: rgba(255, 255, 255, 0.7);
-      margin-bottom: 0.5rem;
+      color: var(--text-soft);
+      margin-bottom: 0.4rem;
     }
+
     .form-group input,
     .form-group textarea {
       width: 100%;
-      background: rgba(255, 255, 255, 0.05);
-      border: 1px solid rgba(255, 255, 255, 0.15);
+      background: rgba(255,255,255,0.05);
+      border: 1px solid rgba(255,255,255,0.1);
       border-radius: 12px;
-      padding: 0.875rem 1rem;
-      font-size: 1rem;
-      color: #fff;
+      padding: 0.8rem 1rem;
+      font-size: 0.9rem;
+      color: var(--text);
       font-family: inherit;
-      transition: border-color 0.3s, box-shadow 0.3s;
+      transition: all 0.3s;
     }
+
     .form-group input::placeholder,
-    .form-group textarea::placeholder { color: rgba(255, 255, 255, 0.3); }
+    .form-group textarea::placeholder {
+      color: var(--text-soft);
+      opacity: 0.6;
+    }
+
     .form-group input:focus,
     .form-group textarea:focus {
       outline: none;
-      border-color: #667eea;
-      box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.2);
+      border-color: var(--accent);
+      box-shadow: 0 0 0 3px rgba(95, 185, 176, 0.15);
     }
-    .form-group textarea { resize: vertical; min-height: 120px; }
-    .form-row { display: grid; grid-template-columns: 1fr 1fr; gap: 1rem; }
+
+    .form-group textarea {
+      resize: vertical;
+      min-height: 100px;
+    }
+
+    .form-row {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 1rem;
+    }
+
+    .char-count {
+      text-align: right;
+      font-size: 0.7rem;
+      color: var(--text-soft);
+      margin-top: 0.3rem;
+      opacity: 0.6;
+    }
+
     .btn {
       width: 100%;
       padding: 1rem;
-      background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+      background: linear-gradient(135deg, var(--accent) 0%, var(--accent-light) 100%);
       border: none;
-      border-radius: 12px;
-      color: #fff;
-      font-size: 1rem;
-      font-weight: 600;
+      border-radius: 50px;
+      color: var(--bg);
+      font-size: 0.95rem;
+      font-weight: 700;
       cursor: pointer;
-      transition: transform 0.2s, box-shadow 0.2s, opacity 0.2s;
+      transition: all 0.3s;
       font-family: inherit;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 0.5rem;
     }
-    .btn:hover { transform: translateY(-2px); box-shadow: 0 10px 30px rgba(102, 126, 234, 0.4); }
-    .btn:disabled { opacity: 0.6; cursor: not-allowed; transform: none; }
-    .info-box {
+
+    .btn:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 8px 25px rgba(95, 185, 176, 0.4);
+    }
+
+    .btn:disabled {
+      opacity: 0.6;
+      cursor: not-allowed;
+      transform: none;
+    }
+
+    .tips {
       margin-top: 1.5rem;
       padding: 1rem;
-      background: rgba(255, 255, 255, 0.03);
-      border: 1px solid rgba(255, 255, 255, 0.08);
+      background: rgba(95, 185, 176, 0.08);
+      border: 1px solid rgba(95, 185, 176, 0.15);
       border-radius: 12px;
-      font-size: 0.8rem;
-      color: rgba(255, 255, 255, 0.6);
+      font-size: 0.75rem;
+      color: var(--text-soft);
       line-height: 1.6;
     }
-    .info-box strong { color: rgba(255, 255, 255, 0.9); }
-    .info-box a { color: #667eea; text-decoration: none; }
-    .success { display: none; text-align: center; padding: 2rem 0; }
+
+    .tips strong { color: var(--accent); }
+
+    .tips a {
+      color: var(--accent);
+      text-decoration: none;
+    }
+
+    .back {
+      text-align: center;
+      margin-top: 1rem;
+    }
+
+    .back a {
+      color: var(--text-soft);
+      font-size: 0.8rem;
+      text-decoration: none;
+      transition: color 0.2s;
+    }
+
+    .back a:hover { color: var(--accent); }
+
+    /* Success */
+    .success { display: none; text-align: center; padding: 1rem 0; }
     .success.show { display: block; }
+
     .success-icon {
-      width: 80px;
-      height: 80px;
-      background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+      width: 70px;
+      height: 70px;
+      background: linear-gradient(135deg, var(--accent) 0%, var(--accent-light) 100%);
       border-radius: 50%;
       display: flex;
       align-items: center;
       justify-content: center;
       margin: 0 auto 1.5rem;
-      animation: pulse 0.5s ease-out;
+      font-size: 2rem;
+      animation: pop 0.5s ease-out;
     }
-    @keyframes pulse { 0% { transform: scale(0); } 50% { transform: scale(1.1); } 100% { transform: scale(1); } }
-    .success h2 { font-size: 1.5rem; margin-bottom: 0.5rem; }
-    .success p { color: rgba(255, 255, 255, 0.6); font-size: 0.9rem; }
+
+    @keyframes pop {
+      0% { transform: scale(0); }
+      70% { transform: scale(1.1); }
+      100% { transform: scale(1); }
+    }
+
+    .success h2 {
+      font-family: 'Quicksand', sans-serif;
+      font-size: 1.4rem;
+      margin-bottom: 0.5rem;
+    }
+
+    .success p {
+      font-size: 0.85rem;
+      color: var(--text-soft);
+    }
+
     .form-content { display: block; }
     .form-content.hidden { display: none; }
-    .error-msg {
-      background: rgba(239, 68, 68, 0.1);
-      border: 1px solid rgba(239, 68, 68, 0.3);
-      color: #fca5a5;
+
+    .error {
+      background: rgba(255, 107, 107, 0.15);
+      border: 1px solid rgba(255, 107, 107, 0.3);
+      color: #ff9f9f;
       padding: 0.75rem 1rem;
-      border-radius: 8px;
-      font-size: 0.85rem;
+      border-radius: 10px;
+      font-size: 0.8rem;
       margin-bottom: 1rem;
       display: none;
     }
-    .error-msg.show { display: block; }
-    .char-count { text-align: right; font-size: 0.7rem; color: rgba(255, 255, 255, 0.4); margin-top: 0.25rem; }
-    .char-count.warning { color: #f59e0b; }
-    .char-count.error { color: #ef4444; }
-    .back-link { text-align: center; margin-top: 1.5rem; }
-    .back-link a { color: rgba(255, 255, 255, 0.5); font-size: 0.85rem; text-decoration: none; transition: color 0.2s; }
-    .back-link a:hover { color: rgba(255, 255, 255, 0.8); }
-    @media (max-width: 480px) { .form-row { grid-template-columns: 1fr; } }
+    .error.show { display: block; }
+
+    @media (max-width: 480px) {
+      .form-row { grid-template-columns: 1fr; }
+    }
   </style>
 </head>
 <body>
   <div class="bg-glow"></div>
-  <div class="container">
-    <div class="card">
+  <div class="deco deco-1">✨</div>
+  <div class="deco deco-2">💫</div>
+
+  <div class="card">
+    <div class="form-content" id="formContent">
       <div class="logo">
-        <div class="logo-icon">📨</div>
+        <div class="logo-icon">💬</div>
         <h1>Send a Message</h1>
-        <p>Tell us what's up and we'll get back to you</p>
+        <p>Aquilonia will help you out ✨</p>
       </div>
 
-      <div class="error-msg" id="errorMsg"></div>
+      <div class="error" id="errorMsg"></div>
 
-      <div class="form-content" id="formContent">
-        <form id="supportForm">
-          <div class="form-row">
-            <div class="form-group">
-              <label for="playerName">In-Game Name</label>
-              <input type="text" id="playerName" name="playerName" placeholder="YourName" required maxlength="50">
-            </div>
-            <div class="form-group">
-              <label for="uid">UID</label>
-              <input type="text" id="uid" name="uid" placeholder="123456" required pattern="[0-9]+" minlength="4" maxlength="20">
-            </div>
-          </div>
-
+      <form id="supportForm">
+        <div class="form-row">
           <div class="form-group">
-            <label for="message">What's up?</label>
-            <textarea id="message" name="message" placeholder="Tell us what's going on..." required maxlength="500"></textarea>
-            <div class="char-count" id="charCount">0 / 500</div>
+            <label for="playerName">In-Game Name</label>
+            <input type="text" id="playerName" placeholder="YourName" required maxlength="30">
           </div>
-
           <div class="form-group">
-            <label for="contactMethod">Contact Method (Optional)</label>
-            <input type="text" id="contactMethod" name="contactMethod" placeholder="Discord, Email, or leave blank">
+            <label for="uid">UID</label>
+            <input type="text" id="uid" placeholder="123456" required pattern="[0-9]+" minlength="4" maxlength="20">
           </div>
-
-          <button type="submit" class="btn" id="submitBtn">Send Message</button>
-        </form>
-
-        <div class="info-box">
-          <strong>💡 Good to know:</strong><br>
-          • Make sure your UID is correct — it's how we find your account<br>
-          • Be specific and screenshots help!<br>
-          • We'll get back to you within 24 hours<br><br>
-          <a href="inbox.html">📬 Check your messages →</a>
         </div>
 
-        <div class="back-link">
-          <a href="index.html">← Back to Home</a>
+        <div class="form-group">
+          <label for="message">What's up?</label>
+          <textarea id="message" placeholder="Tell us what's going on..." required maxlength="500"></textarea>
+          <div class="char-count"><span id="charCount">0</span>/500</div>
         </div>
+
+        <div class="form-group">
+          <label for="contactMethod">Contact (optional)</label>
+          <input type="text" id="contactMethod" placeholder="Discord or email">
+        </div>
+
+        <button type="submit" class="btn" id="submitBtn">
+          ✨ Send Message
+        </button>
+      </form>
+
+      <div class="tips">
+        <strong>💡 Tips:</strong> Make sure your UID is correct! Screenshots help a lot too!<br><br>
+        <a href="inbox.html">📬 Check your messages →</a>
       </div>
 
-      <div class="success" id="successMsg">
-        <div class="success-icon">
-          <svg width="40" height="40" viewBox="0 0 24 24" fill="none">
-            <path d="M20 6L9 17L4 12" stroke="white" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"/>
-          </svg>
-        </div>
-        <h2>All sent!</h2>
-        <p>Got your message. We'll get back to you soon!</p>
-        <div class="back-link">
-          <a href="inbox.html">📬 Check your messages →</a>
-        </div>
+      <div class="back">
+        <a href="index.html">← Back to Home</a>
+      </div>
+    </div>
+
+    <div class="success" id="successMsg">
+      <div class="success-icon">✨</div>
+      <h2>All sent!</h2>
+      <p>Got your message! Aquilonia will get back to you soon 💜</p>
+      <div class="back" style="margin-top: 1.5rem;">
+        <a href="inbox.html">📬 Check your messages →</a>
       </div>
     </div>
   </div>
@@ -219,15 +338,11 @@
     const successMsg = document.getElementById('successMsg');
     const submitBtn = document.getElementById('submitBtn');
     const errorMsg = document.getElementById('errorMsg');
-    const charCount = document.getElementById('charCount');
     const messageInput = document.getElementById('message');
+    const charCount = document.getElementById('charCount');
 
     messageInput.addEventListener('input', () => {
-      const len = messageInput.value.length;
-      charCount.textContent = `${len} / 500`;
-      charCount.classList.remove('warning', 'error');
-      if (len > 450) charCount.classList.add('warning');
-      if (len >= 500) charCount.classList.add('error');
+      charCount.textContent = messageInput.value.length;
     });
 
     form.addEventListener('submit', async (e) => {
@@ -238,18 +353,14 @@
       const contactMethod = document.getElementById('contactMethod').value.trim();
 
       if (!playerName || !uid || !message) {
-        showError('Please fill in all required fields');
-        return;
-      }
-
-      if (uid.length < 4 || uid.length > 20) {
-        showError('UID must be between 4 and 20 characters');
+        errorMsg.textContent = 'Please fill in all required fields';
+        errorMsg.classList.add('show');
         return;
       }
 
       submitBtn.disabled = true;
       submitBtn.textContent = 'Sending...';
-      hideError();
+      errorMsg.classList.remove('show');
 
       try {
         const response = await fetch('/api', {
@@ -257,33 +368,24 @@
           headers: { 'Content-Type': 'application/json' },
           body: JSON.stringify({ action: 'submit', playerName, uid, message, contactMethod })
         });
-
         const data = await response.json();
 
         if (data.success) {
           formContent.classList.add('hidden');
           successMsg.classList.add('show');
-          document.getElementById('refId').textContent = '#' + (data.refId || '---');
         } else {
-          showError(data.error || 'Failed to send message. Please try again.');
+          errorMsg.textContent = data.error || 'Something went wrong';
+          errorMsg.classList.add('show');
           submitBtn.disabled = false;
-          submitBtn.textContent = 'Send Message';
+          submitBtn.textContent = '✨ Send Message';
         }
       } catch (error) {
-        showError('Connection error. Please check your internet and try again.');
+        errorMsg.textContent = 'Connection error. Please try again.';
+        errorMsg.classList.add('show');
         submitBtn.disabled = false;
-        submitBtn.textContent = 'Send Message';
+        submitBtn.textContent = '✨ Send Message';
       }
     });
-
-    function showError(msg) {
-      errorMsg.textContent = msg;
-      errorMsg.classList.add('show');
-    }
-
-    function hideError() {
-      errorMsg.classList.remove('show');
-    }
   </script>
 </body>
 </html>
