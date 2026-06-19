@@ -229,6 +229,6 @@ module.exports = async (req, res) => {
     }
   } catch (error) {
     console.error('API Error:', error);
-    return res.status(500).json({ success: false, error: 'Internal server error' });
+    return res.status(500).json({ success: false, error: error.message || 'Internal server error' });
   }
 };
