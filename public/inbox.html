@@ -335,8 +335,8 @@
     <div class="form-section" id="checkForm">
       <div class="logo">
         <div class="logo-icon">📬</div>
-        <h1>Check Messages</h1>
-        <p>Enter your UID to see your messages</p>
+        <h1>Your Messages~</h1>
+        <p>Enter your UID to see replies 💜</p>
       </div>
 
       <div class="error" id="errorMsg"></div>
@@ -436,7 +436,7 @@
         messageList.innerHTML = `
           <div class="empty">
             <div class="empty-icon">📭</div>
-            <h3>No messages yet</h3>
+            <h3>No messages yet~</h3>
             <p>Haven't sent anything? <a href="form.html" style="color: var(--accent);">Send one!</a></p>
           </div>
         `;
@@ -453,7 +453,7 @@
               <div class="message-content">${escapeHtml(msg.message)}</div>
               ${msg.reply ? `
                 <div class="message-reply">
-                  <div class="message-reply-label">💜 Aquilonia's Reply</div>
+                  <div class="message-reply-label">💜 Reply</div>
                   <div class="message-reply-content">${escapeHtml(msg.reply)}</div>
                 </div>
               ` : ''}
