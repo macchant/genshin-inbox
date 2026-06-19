@@ -234,6 +234,40 @@ module.exports = async (req, res) => {
 
       default:
         return res.status(400).json({ success: false, error: 'Unknown action' });
+
+      case 'test': {
+        // Debug endpoint
+        console.log('=== TEST ENDPOINT ===');
+        console.log('SUPABASE_URL:', CONFIG.supabaseUrl ? 'SET' : 'MISSING');
+        console.log('SUPABASE_KEY:', CONFIG.supabaseKey ? 'SET' : 'MISSING');
+        console.log('TELEGRAM_TOKEN:', CONFIG.telegramBotToken ? 'SET' : 'MISSING');
+        console.log('TELEGRAM_CHAT_ID:', CONFIG.telegramAdminChatId ? 'SET' : 'MISSING');
+        console.log('ADMIN_TOKEN:', CONFIG.adminToken ? 'SET' : 'MISSING');
+
+        // Try fetching messages
+        try {
+          const testMsg = await supabaseFetch('messages?select=*&limit=1');
+          console.log('Supabase connection: SUCCESS', testMsg);
+        } catch (e) {
+          console.log('Supabase connection: FAILED', e.message);
+        }
+
+        // Try Telegram
+        try {
+          await fetch(`https://api.telegram.org/bot${CONFIG.telegramBotToken}/getMe`);
+          console.log('Telegram bot: VALID');
+        } catch (e) {
+          console.log('Telegram bot: FAILED', e.message);
+        }
+
+        return res.status(200).json({
+          supabaseUrl: !!CONFIG.supabaseUrl,
+          supabaseKey: !!CONFIG.supabaseKey,
+          telegramToken: !!CONFIG.telegramBotToken,
+          telegramChatId: !!CONFIG.telegramAdminChatId,
+          adminToken: !!CONFIG.adminToken
+        });
+      }
     }
   } catch (error) {
     console.error('API Error:', error);
