@@ -1,83 +1,35 @@
 /**
  * API Endpoint for Akasa Support System
- * Vercel Serverless Function
+ * Vercel Serverless Function with Supabase
  */
-
-const lowdb = require('lowdb');
-const { join } = require('path');
-const { readFileSync, writeFileSync, existsSync } = require('fs');
-
-// Database file path (for Vercel serverless)
-const DB_FILE = join(process.cwd(), 'db.json');
-
-// Initialize lowdb
-let db;
-
-function initDb() {
-  if (db) return db;
-
-  try {
-    // Check if file exists
-    if (!existsSync(DB_FILE)) {
-      // Create initial database
-      writeFileSync(DB_FILE, JSON.stringify({
-        messages: [],
-        settings: {}
-      }));
-    }
-
-    const data = JSON.parse(readFileSync(DB_FILE, 'utf-8'));
-
-    db = {
-      data,
-      get: (key) => data[key],
-      get: (collection) => data[collection] || [],
-      push: (collection, item) => {
-        item.id = Date.now().toString(36) + Math.random().toString(36).substr(2);
-        item.created_at = new Date().toISOString();
-        item.status = 'pending';
-        data[collection].push(item);
-        saveDb();
-        return item;
-      },
-      find: (collection, predicate) => {
-        return data[collection].filter(predicate);
-      },
-      findOne: (collection, predicate) => {
-        return data[collection].find(predicate);
-      },
-      update: (collection, predicate, updates) => {
-        const index = data[collection].findIndex(predicate);
-        if (index !== -1) {
-          data[collection][index] = { ...data[collection][index], ...updates };
-          saveDb();
-          return data[collection][index];
-        }
-        return null;
-      }
-    };
-
-    return db;
-  } catch (error) {
-    console.error('Database init error:', error);
-    return null;
-  }
-}
-
-function saveDb() {
-  try {
-    writeFileSync(DB_FILE, JSON.stringify(db.data, null, 2));
-  } catch (error) {
-    console.error('Save error:', error);
-  }
-}
 
 // Config
 const CONFIG = {
   adminToken: process.env.ADMIN_TOKEN || 'akasa-admin-2026-secure',
   telegramBotToken: process.env.TELEGRAM_BOT_TOKEN || '',
-  telegramAdminChatId: process.env.TELEGRAM_ADMIN_ID || ''
+  telegramAdminChatId: process.env.TELEGRAM_ADMIN_ID || '',
+  supabaseUrl: process.env.SUPABASE_URL || '',
+  supabaseKey: process.env.SUPABASE_SERVICE_KEY || '' // Use service key for server-side
 };
+
+// Supabase fetch helper
+async function supabaseFetch(endpoint, options = {}) {
+  const res = await fetch(`${CONFIG.supabaseUrl}/rest/v1/${endpoint}`, {
+    ...options,
+    headers: {
+      'Content-Type': 'application/json',
+      'apikey': CONFIG.supabaseKey,
+      'Authorization': `Bearer ${CONFIG.supabaseKey}`,
+      'Prefer': 'return=representation',
+      ...options.headers
+    }
+  });
+  if (!res.ok) {
+    const error = await res.text();
+    throw new Error(error);
+  }
+  return options.method === 'DELETE' ? null : res.json();
+}
 
 // Send Telegram notification (optional)
 async function sendTelegramNotification(message) {
@@ -121,9 +73,6 @@ module.exports = async (req, res) => {
     return res.status(400).json({ success: false, error: 'Action required' });
   }
 
-  // Initialize database
-  initDb();
-
   // Route actions
   try {
     switch (action) {
@@ -141,32 +90,34 @@ module.exports = async (req, res) => {
           return res.status(400).json({ success: false, error: 'Message is required' });
         }
 
-        // Save message
-        const newMessage = db.push('messages', {
-          player_name: playerName.trim(),
-          uid: uid.trim(),
-          message: message.trim(),
-          contact_method: contactMethod?.trim() || '',
-          sender_type: 'web',
-          reply: '',
-          replied_by: '',
-          replied_at: ''
+        // Save to Supabase
+        const newMessage = await supabaseFetch('messages', {
+          method: 'POST',
+          body: JSON.stringify({
+            player_name: playerName.trim(),
+            uid: uid.trim(),
+            message: message.trim(),
+            contact_method: contactMethod?.trim() || '',
+            sender_type: 'web'
+          })
         });
+
+        const msg = Array.isArray(newMessage) ? newMessage[0] : newMessage;
 
         // Notify admin via Telegram
         if (CONFIG.telegramBotToken) {
           const tgMsg = `🌐 <b>New Support Request!</b>\n\n` +
-            `👤 <b>Player:</b> ${newMessage.player_name}\n` +
-            `🆔 <b>UID:</b> <code>${newMessage.uid}</code>\n` +
-            `💬 <b>Message:</b>\n${newMessage.message}\n\n` +
+            `👤 <b>Player:</b> ${msg.player_name}\n` +
+            `🆔 <b>UID:</b> <code>${msg.uid}</code>\n\n` +
+            `💬 <b>Message:</b>\n${msg.message}\n\n` +
             `📅 <b>Time:</b> ${new Date().toLocaleString()}\n` +
-            `📎 <b>Ref:</b> <code>#${newMessage.id}</code>`;
+            `📎 <b>Ref:</b> <code>#${msg.id.slice(0, 8)}</code>`;
           sendTelegramNotification(tgMsg);
         }
 
         return res.status(200).json({
           success: true,
-          refId: newMessage.id,
+          refId: msg.id,
           message: 'Message sent successfully'
         });
       }
@@ -178,16 +129,13 @@ module.exports = async (req, res) => {
           return res.status(401).json({ success: false, error: 'Unauthorized' });
         }
 
+        let url = 'messages?order=created_at.desc';
         const { status } = payload;
-        let messages = db.get('messages');
-
         if (status && status !== 'all') {
-          messages = messages.filter(m => m.status === status);
+          url += `&status=eq.${status}`;
         }
 
-        // Sort by newest first
-        messages.sort((a, b) => new Date(b.created_at) - new Date(a.created_at));
-
+        const messages = await supabaseFetch(url);
         return res.status(200).json({ success: true, messages });
       }
 
@@ -198,9 +146,7 @@ module.exports = async (req, res) => {
           return res.status(400).json({ success: false, error: 'UID is required' });
         }
 
-        let messages = db.get('messages').filter(m => m.uid === uid);
-        messages.sort((a, b) => new Date(b.created_at) - new Date(a.created_at));
-
+        const messages = await supabaseFetch(`messages?uid=eq.${uid}&order=created_at.desc`);
         return res.status(200).json({ success: true, messages });
       }
 
@@ -215,25 +161,24 @@ module.exports = async (req, res) => {
           return res.status(400).json({ success: false, error: 'Invalid parameters' });
         }
 
-        const updated = db.update(
-          'messages',
-          m => m.id === msg_id,
-          {
+        const updated = await supabaseFetch(`messages?id=eq.${msg_id}`, {
+          method: 'PATCH',
+          body: JSON.stringify({
             reply: reply.trim(),
             replied_by: 'admin',
             replied_at: new Date().toISOString(),
             status: 'replied'
-          }
-        );
+          })
+        });
 
-        if (!updated) {
+        if (!updated || updated.length === 0) {
           return res.status(404).json({ success: false, error: 'Message not found' });
         }
 
         // Notify via Telegram
         if (CONFIG.telegramBotToken) {
           const tgMsg = `✅ <b>Reply Sent!</b>\n\n` +
-            `📎 <b>Ref:</b> <code>#${msg_id}</code>\n` +
+            `📎 <b>Ref:</b> <code>#${msg_id.slice(0, 8)}</code>\n` +
             `💬 <b>Reply:</b>\n${reply}`;
           sendTelegramNotification(tgMsg);
         }
@@ -248,7 +193,7 @@ module.exports = async (req, res) => {
           return res.status(401).json({ success: false, error: 'Unauthorized' });
         }
 
-        const messages = db.get('messages');
+        const messages = await supabaseFetch('messages');
         const today = new Date().toISOString().split('T')[0];
         const weekAgo = new Date(Date.now() - 7 * 24 * 60 * 60 * 1000).toISOString();
 
@@ -256,6 +201,7 @@ module.exports = async (req, res) => {
           total: messages.length,
           pending: messages.filter(m => m.status === 'pending').length,
           replied: messages.filter(m => m.status === 'replied').length,
+          resolved: messages.filter(m => m.status === 'resolved').length,
           today: messages.filter(m => m.created_at.startsWith(today)).length,
           week: messages.filter(m => m.created_at >= weekAgo).length
         };
@@ -270,7 +216,10 @@ module.exports = async (req, res) => {
           return res.status(401).json({ success: false, error: 'Unauthorized' });
         }
 
-        db.update('messages', m => m.id === msg_id, { status: 'resolved' });
+        await supabaseFetch(`messages?id=eq.${msg_id}`, {
+          method: 'PATCH',
+          body: JSON.stringify({ status: 'resolved' })
+        });
 
         return res.status(200).json({ success: true });
       }

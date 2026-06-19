@@ -380,6 +380,7 @@
           submitBtn.textContent = '✨ Send Message';
         }
       } catch (error) {
+        console.error('Form submit error:', error);
         errorMsg.textContent = 'Connection error. Please try again.';
         errorMsg.classList.add('show');
         submitBtn.disabled = false;
