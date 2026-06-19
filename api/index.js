@@ -113,7 +113,7 @@ module.exports = async (req, res) => {
             `📅 <b>Time:</b> ${new Date().toLocaleString()}\n` +
             `📎 <b>Ref:</b> <code>#${msg.id.slice(0, 8)}</code>`;
 
-          // Send Telegram notification - await it properly
+          // Send Telegram notification
           try {
             const tgRes = await fetch(`https://api.telegram.org/bot${CONFIG.telegramBotToken}/sendMessage`, {
               method: 'POST',
@@ -125,7 +125,6 @@ module.exports = async (req, res) => {
               })
             });
             const tgData = await tgRes.json();
-            console.log('Telegram response:', tgData);
             if (!tgData.ok) {
               console.error('Telegram error:', tgData.description);
             }
@@ -144,9 +143,6 @@ module.exports = async (req, res) => {
       case 'get_messages': {
         const { token } = payload;
 
-        console.log('get_messages called, token:', token ? 'provided' : 'missing');
-        console.log('Expected token:', CONFIG.adminToken);
-
         if (token !== CONFIG.adminToken) {
           return res.status(401).json({ success: false, error: 'Unauthorized' });
         }
@@ -157,9 +153,7 @@ module.exports = async (req, res) => {
           url += `&status=eq.${status}`;
         }
 
-        console.log('Fetching from:', `${CONFIG.supabaseUrl}/rest/v1/${url}`);
         const messages = await supabaseFetch(url);
-        console.log('Messages returned:', messages?.length || 0);
         return res.status(200).json({ success: true, messages });
       }
 
@@ -250,49 +244,6 @@ module.exports = async (req, res) => {
 
       default:
         return res.status(400).json({ success: false, error: 'Unknown action' });
-
-      case 'test': {
-        // Debug endpoint
-        const results = {
-          supabaseUrl: !!CONFIG.supabaseUrl,
-          supabaseKey: !!CONFIG.supabaseKey,
-          telegramToken: !!CONFIG.telegramBotToken,
-          telegramChatId: !!CONFIG.telegramAdminChatId,
-          adminToken: !!CONFIG.adminToken
-        };
-
-        // Try fetching messages
-        try {
-          const testMsg = await supabaseFetch('messages?select=*&limit=1');
-          results.supabaseStatus = 'OK';
-          results.messageCount = 'connected';
-        } catch (e) {
-          results.supabaseStatus = 'FAILED: ' + e.message;
-        }
-
-        // Try Telegram
-        try {
-          const botInfo = await fetch(`https://api.telegram.org/bot${CONFIG.telegramBotToken}/getMe`).then(r => r.json());
-          results.telegramBot = botInfo.ok ? 'OK (@' + botInfo.result.username + ')' : 'FAILED';
-
-          // Send test message
-          const testMsg = await fetch(`https://api.telegram.org/bot${CONFIG.telegramBotToken}/sendMessage`, {
-            method: 'POST',
-            headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify({
-              chat_id: CONFIG.telegramAdminChatId,
-              text: '🧪 <b>Test Message!</b>\n\nBot is working correctly!',
-              parse_mode: 'HTML'
-            })
-          }).then(r => r.json());
-
-          results.telegramSend = testMsg.ok ? 'OK - Check your Telegram!' : 'FAILED: ' + testMsg.description;
-        } catch (e) {
-          results.telegramSend = 'ERROR: ' + e.message;
-        }
-
-        return res.status(200).json(results);
-      }
     }
   } catch (error) {
     console.error('API Error:', error);
