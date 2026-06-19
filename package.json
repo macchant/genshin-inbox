@@ -1,13 +1,10 @@
 {
-  "name": "akasa-support-system",
+  "name": "genshin-inbox",
   "version": "1.0.0",
-  "description": "Akasa Game Support System - Web-based support with inbox",
+  "description": "Simple support inbox system for players",
   "main": "api/index.js",
   "scripts": {
     "dev": "vercel dev",
     "start": "node api/index.js"
-  },
-  "dependencies": {
-    "lowdb": "^7.0.1"
   }
 }

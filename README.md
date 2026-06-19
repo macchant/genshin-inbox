@@ -1,141 +1,55 @@
-# Akasa Support System
+# Support Inbox
 
-A modern, serverless support system for games - built with Node.js for Vercel deployment.
+A simple support system — players send messages, you reply, they check back with their UID.
 
-## Features
+## What It Does
 
-- 🌐 **Landing Page** - Professional support homepage
-- 📝 **Submit Form** - Players send requests (name + UID + message)
+- 🌐 **Landing page** - Friendly intro page
+- 📝 **Send form** - Players submit (name + UID + message)
 - 📬 **Inbox** - Players check responses with their UID
-- 🔐 **Admin Dashboard** - Manage & reply to messages
-- 📱 **Mobile Friendly** - Works on all devices
-- ⚡ **Serverless** - Deploys to Vercel for free
+- 🔐 **Admin** - You manage and reply to messages
 
-## Pages
-
-| Page | File | Purpose |
-|------|------|---------|
-| Home | `public/index.html` | Landing page with info |
-| Submit | `public/form.html` | Send support request |
-| Inbox | `public/inbox.html` | Check messages by UID |
-| Admin | `public/admin.html` | Dashboard (password protected) |
-
-## Quick Deploy to Vercel
+## Quick Setup
 
 ### 1. Push to GitHub
 ```bash
-cd game-support-bot-nodejs
 git init
 git add .
 git commit -m "Initial commit"
-git branch -M main
-git remote add origin https://github.com/YOUR_USERNAME/akasa-support.git
-git push -u origin main
+git push
 ```
 
-### 2. Connect to Vercel
+### 2. Deploy on Vercel
 1. Go to [vercel.com](https://vercel.com)
-2. Click "New Project"
-3. Import your GitHub repo
-4. Click "Deploy"
+2. Import your repo
+3. Click **Deploy**
 
-### 3. Set Environment Variables (Optional)
-In Vercel dashboard → Settings → Environment Variables:
-- `ADMIN_TOKEN` = your-admin-password
-- `TELEGRAM_BOT_TOKEN` = your-telegram-bot-token
-- `TELEGRAM_ADMIN_ID` = your-telegram-chat-id
-
-## Local Development
-
-```bash
-# Install dependencies
-npm install
-
-# Run dev server
-npm run dev
-
-# Or use Vercel CLI
-npx vercel dev
-```
+### 3. Set Password
+In Vercel → Settings → Environment Variables:
+- `ADMIN_TOKEN` = your-password
 
 ## How It Works
 
 ```
-Player → index.html → clicks "Submit Request"
-              ↓
-         form.html: Name + UID + Message
-              ↓
-         API saves to db.json
-              ↓
-         You check admin.html → reply
-              ↓
-         Player checks inbox.html → enters UID → sees reply
+Player visits site → fills form → you get notified → you reply → player checks inbox
 ```
 
-## Player Flow
+## URLs After Deploy
 
-1. Visit site → click "Submit Request"
-2. Enter: In-game name, UID, Message
-3. Submit → get reference ID
-4. Wait for response
-5. Visit "Check Messages" → enter UID → see reply
+| Page | File |
+|------|------|
+| Home | `/` |
+| Send | `/form.html` |
+| Check | `/inbox.html` |
+| Admin | `/admin.html` |
 
-## Admin Access
+## Tech
 
-URL: `your-site.vercel.app/admin.html`
-
-Token: `akasa-admin-2026-secure`
-
-(Change this in environment variables after deployment)
-
-## API Actions
-
-| Action | Description |
-|--------|-------------|
-| `submit` | Submit new message |
-| `get_messages` | Get all messages (admin) |
-| `get_messages_by_uid` | Get messages for player |
-| `reply` | Reply to a message |
-| `get_stats` | Get dashboard stats |
-| `resolve` | Mark message resolved |
-
-## Environment Variables
-
-| Variable | Required | Description |
-|----------|----------|-------------|
-| `ADMIN_TOKEN` | Yes | Password for admin dashboard |
-| `TELEGRAM_BOT_TOKEN` | No | Send notifications to Telegram |
-| `TELEGRAM_ADMIN_ID` | No | Your Telegram Chat ID |
-
-## Tech Stack
-
-- **Frontend**: HTML, CSS, Vanilla JavaScript
-- **Backend**: Node.js (Vercel Serverless Functions)
-- **Database**: JSON file (db.json)
-- **Hosting**: Vercel (free)
-
-## File Structure
-
-```
-├── api/
-│   └── index.js        # Serverless API handler
-├── public/
-│   ├── index.html      # Landing page
-│   ├── form.html       # Submit form
-│   ├── inbox.html      # Check messages
-│   └── admin.html     # Admin dashboard
-├── vercel.json         # Vercel config
-├── package.json         # Dependencies
-└── README.md           # This file
-```
-
-## Security
-
-- Admin dashboard requires token
-- No personal data stored (only name + UID)
-- Messages are private per UID
-- HTTPS enforced by Vercel
+- HTML/CSS/JS (static files)
+- Node.js API (Vercel serverless)
+- JSON storage
+- Vercel hosting (free)
 
 ---
 
-Built with ❤️ for Akasa
+Made for players, by players. ✌️
