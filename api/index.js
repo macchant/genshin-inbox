@@ -105,14 +105,17 @@ module.exports = async (req, res) => {
         const msg = Array.isArray(newMessage) ? newMessage[0] : newMessage;
 
         // Notify admin via Telegram
-        if (CONFIG.telegramBotToken) {
+        if (CONFIG.telegramBotToken && CONFIG.telegramAdminChatId) {
+          console.log('Sending Telegram notification...');
           const tgMsg = `🌐 <b>New Support Request!</b>\n\n` +
             `👤 <b>Player:</b> ${msg.player_name}\n` +
             `🆔 <b>UID:</b> <code>${msg.uid}</code>\n\n` +
             `💬 <b>Message:</b>\n${msg.message}\n\n` +
             `📅 <b>Time:</b> ${new Date().toLocaleString()}\n` +
             `📎 <b>Ref:</b> <code>#${msg.id.slice(0, 8)}</code>`;
-          sendTelegramNotification(tgMsg);
+          sendTelegramNotification(tgMsg).catch(e => console.error('Telegram error:', e));
+        } else {
+          console.log('Telegram not configured:', { hasToken: !!CONFIG.telegramBotToken, hasChatId: !!CONFIG.telegramAdminChatId });
         }
 
         return res.status(200).json({
@@ -125,6 +128,9 @@ module.exports = async (req, res) => {
       case 'get_messages': {
         const { token } = payload;
 
+        console.log('get_messages called, token:', token ? 'provided' : 'missing');
+        console.log('Expected token:', CONFIG.adminToken);
+
         if (token !== CONFIG.adminToken) {
           return res.status(401).json({ success: false, error: 'Unauthorized' });
         }
@@ -135,7 +141,9 @@ module.exports = async (req, res) => {
           url += `&status=eq.${status}`;
         }
 
+        console.log('Fetching from:', `${CONFIG.supabaseUrl}/rest/v1/${url}`);
         const messages = await supabaseFetch(url);
+        console.log('Messages returned:', messages?.length || 0);
         return res.status(200).json({ success: true, messages });
       }
 
