@@ -1,0 +1,13 @@
+{
+  "name": "akasa-support-system",
+  "version": "1.0.0",
+  "description": "Akasa Game Support System - Web-based support with inbox",
+  "main": "api/index.js",
+  "scripts": {
+    "dev": "vercel dev",
+    "start": "node api/index.js"
+  },
+  "dependencies": {
+    "lowdb": "^7.0.1"
+  }
+}

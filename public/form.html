@@ -1,0 +1,292 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Akasa - Submit Request</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <style>
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    body {
+      font-family: 'Inter', -apple-system, sans-serif;
+      background: #0a0a0f;
+      min-height: 100vh;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 2rem;
+      color: #fff;
+    }
+    .bg-glow {
+      position: fixed;
+      inset: 0;
+      background: radial-gradient(ellipse at 20% 20%, rgba(102, 126, 234, 0.15) 0%, transparent 50%),
+                  radial-gradient(ellipse at 80% 80%, rgba(118, 75, 162, 0.15) 0%, transparent 50%);
+      pointer-events: none;
+      z-index: 0;
+    }
+    .container { width: 100%; max-width: 480px; position: relative; z-index: 1; }
+    .card {
+      background: rgba(255, 255, 255, 0.05);
+      backdrop-filter: blur(20px);
+      border: 1px solid rgba(255, 255, 255, 0.1);
+      border-radius: 24px;
+      padding: 2.5rem;
+      box-shadow: 0 25px 50px rgba(0, 0, 0, 0.3);
+    }
+    .logo { text-align: center; margin-bottom: 2rem; }
+    .logo-icon {
+      width: 64px;
+      height: 64px;
+      background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+      border-radius: 16px;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      margin-bottom: 1rem;
+      font-size: 2rem;
+    }
+    .logo h1 { font-size: 1.75rem; font-weight: 700; letter-spacing: -0.02em; margin-bottom: 0.25rem; }
+    .logo p { color: rgba(255, 255, 255, 0.6); font-size: 0.875rem; }
+    .form-group { margin-bottom: 1.25rem; }
+    .form-group label {
+      display: block;
+      font-size: 0.75rem;
+      font-weight: 600;
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+      color: rgba(255, 255, 255, 0.7);
+      margin-bottom: 0.5rem;
+    }
+    .form-group input,
+    .form-group textarea {
+      width: 100%;
+      background: rgba(255, 255, 255, 0.05);
+      border: 1px solid rgba(255, 255, 255, 0.15);
+      border-radius: 12px;
+      padding: 0.875rem 1rem;
+      font-size: 1rem;
+      color: #fff;
+      font-family: inherit;
+      transition: border-color 0.3s, box-shadow 0.3s;
+    }
+    .form-group input::placeholder,
+    .form-group textarea::placeholder { color: rgba(255, 255, 255, 0.3); }
+    .form-group input:focus,
+    .form-group textarea:focus {
+      outline: none;
+      border-color: #667eea;
+      box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.2);
+    }
+    .form-group textarea { resize: vertical; min-height: 120px; }
+    .form-row { display: grid; grid-template-columns: 1fr 1fr; gap: 1rem; }
+    .btn {
+      width: 100%;
+      padding: 1rem;
+      background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+      border: none;
+      border-radius: 12px;
+      color: #fff;
+      font-size: 1rem;
+      font-weight: 600;
+      cursor: pointer;
+      transition: transform 0.2s, box-shadow 0.2s, opacity 0.2s;
+      font-family: inherit;
+    }
+    .btn:hover { transform: translateY(-2px); box-shadow: 0 10px 30px rgba(102, 126, 234, 0.4); }
+    .btn:disabled { opacity: 0.6; cursor: not-allowed; transform: none; }
+    .info-box {
+      margin-top: 1.5rem;
+      padding: 1rem;
+      background: rgba(255, 255, 255, 0.03);
+      border: 1px solid rgba(255, 255, 255, 0.08);
+      border-radius: 12px;
+      font-size: 0.8rem;
+      color: rgba(255, 255, 255, 0.6);
+      line-height: 1.6;
+    }
+    .info-box strong { color: rgba(255, 255, 255, 0.9); }
+    .info-box a { color: #667eea; text-decoration: none; }
+    .success { display: none; text-align: center; padding: 2rem 0; }
+    .success.show { display: block; }
+    .success-icon {
+      width: 80px;
+      height: 80px;
+      background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      margin: 0 auto 1.5rem;
+      animation: pulse 0.5s ease-out;
+    }
+    @keyframes pulse { 0% { transform: scale(0); } 50% { transform: scale(1.1); } 100% { transform: scale(1); } }
+    .success h2 { font-size: 1.5rem; margin-bottom: 0.5rem; }
+    .success p { color: rgba(255, 255, 255, 0.6); font-size: 0.9rem; }
+    .form-content { display: block; }
+    .form-content.hidden { display: none; }
+    .error-msg {
+      background: rgba(239, 68, 68, 0.1);
+      border: 1px solid rgba(239, 68, 68, 0.3);
+      color: #fca5a5;
+      padding: 0.75rem 1rem;
+      border-radius: 8px;
+      font-size: 0.85rem;
+      margin-bottom: 1rem;
+      display: none;
+    }
+    .error-msg.show { display: block; }
+    .char-count { text-align: right; font-size: 0.7rem; color: rgba(255, 255, 255, 0.4); margin-top: 0.25rem; }
+    .char-count.warning { color: #f59e0b; }
+    .char-count.error { color: #ef4444; }
+    .back-link { text-align: center; margin-top: 1.5rem; }
+    .back-link a { color: rgba(255, 255, 255, 0.5); font-size: 0.85rem; text-decoration: none; transition: color 0.2s; }
+    .back-link a:hover { color: rgba(255, 255, 255, 0.8); }
+    @media (max-width: 480px) { .form-row { grid-template-columns: 1fr; } }
+  </style>
+</head>
+<body>
+  <div class="bg-glow"></div>
+  <div class="container">
+    <div class="card">
+      <div class="logo">
+        <div class="logo-icon">🎮</div>
+        <h1>Akasa Support</h1>
+        <p>Send us a message, we'll get back to you</p>
+      </div>
+
+      <div class="error-msg" id="errorMsg"></div>
+
+      <div class="form-content" id="formContent">
+        <form id="supportForm">
+          <div class="form-row">
+            <div class="form-group">
+              <label for="playerName">In-Game Name</label>
+              <input type="text" id="playerName" name="playerName" placeholder="YourName" required maxlength="50">
+            </div>
+            <div class="form-group">
+              <label for="uid">UID</label>
+              <input type="text" id="uid" name="uid" placeholder="123456" required pattern="[0-9]+" minlength="4" maxlength="20">
+            </div>
+          </div>
+
+          <div class="form-group">
+            <label for="message">Message</label>
+            <textarea id="message" name="message" placeholder="Describe your issue or question..." required maxlength="500"></textarea>
+            <div class="char-count" id="charCount">0 / 500</div>
+          </div>
+
+          <div class="form-group">
+            <label for="contactMethod">Contact Method (Optional)</label>
+            <input type="text" id="contactMethod" name="contactMethod" placeholder="Discord, Email, or leave blank">
+          </div>
+
+          <button type="submit" class="btn" id="submitBtn">Send Message</button>
+        </form>
+
+        <div class="info-box">
+          <strong>💡 Tips:</strong><br>
+          • Make sure your UID is correct - this is how we identify your account<br>
+          • Be specific about your issue for faster response<br>
+          • Response time: usually within 24 hours<br><br>
+          <a href="inbox.html">📬 Check your messages →</a>
+        </div>
+
+        <div class="back-link">
+          <a href="index.html">← Back to Home</a>
+        </div>
+      </div>
+
+      <div class="success" id="successMsg">
+        <div class="success-icon">
+          <svg width="40" height="40" viewBox="0 0 24 24" fill="none">
+            <path d="M20 6L9 17L4 12" stroke="white" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"/>
+          </svg>
+        </div>
+        <h2>Message Sent!</h2>
+        <p>Your message has been received. A staff member will respond within 24 hours.</p>
+        <p style="margin-top: 1rem; font-size: 0.75rem; color: rgba(255,255,255,0.4);">
+          Reference ID: <span id="refId">-</span>
+        </p>
+        <div class="back-link">
+          <a href="inbox.html">📬 Check your messages →</a>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    const form = document.getElementById('supportForm');
+    const formContent = document.getElementById('formContent');
+    const successMsg = document.getElementById('successMsg');
+    const submitBtn = document.getElementById('submitBtn');
+    const errorMsg = document.getElementById('errorMsg');
+    const charCount = document.getElementById('charCount');
+    const messageInput = document.getElementById('message');
+
+    messageInput.addEventListener('input', () => {
+      const len = messageInput.value.length;
+      charCount.textContent = `${len} / 500`;
+      charCount.classList.remove('warning', 'error');
+      if (len > 450) charCount.classList.add('warning');
+      if (len >= 500) charCount.classList.add('error');
+    });
+
+    form.addEventListener('submit', async (e) => {
+      e.preventDefault();
+      const playerName = document.getElementById('playerName').value.trim();
+      const uid = document.getElementById('uid').value.trim();
+      const message = document.getElementById('message').value.trim();
+      const contactMethod = document.getElementById('contactMethod').value.trim();
+
+      if (!playerName || !uid || !message) {
+        showError('Please fill in all required fields');
+        return;
+      }
+
+      if (uid.length < 4 || uid.length > 20) {
+        showError('UID must be between 4 and 20 characters');
+        return;
+      }
+
+      submitBtn.disabled = true;
+      submitBtn.textContent = 'Sending...';
+      hideError();
+
+      try {
+        const response = await fetch('/api', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ action: 'submit', playerName, uid, message, contactMethod })
+        });
+
+        const data = await response.json();
+
+        if (data.success) {
+          formContent.classList.add('hidden');
+          successMsg.classList.add('show');
+          document.getElementById('refId').textContent = '#' + (data.refId || '---');
+        } else {
+          showError(data.error || 'Failed to send message. Please try again.');
+          submitBtn.disabled = false;
+          submitBtn.textContent = 'Send Message';
+        }
+      } catch (error) {
+        showError('Connection error. Please check your internet and try again.');
+        submitBtn.disabled = false;
+        submitBtn.textContent = 'Send Message';
+      }
+    });
+
+    function showError(msg) {
+      errorMsg.textContent = msg;
+      errorMsg.classList.add('show');
+    }
+
+    function hideError() {
+      errorMsg.classList.remove('show');
+    }
+  </script>
+</body>
+</html>

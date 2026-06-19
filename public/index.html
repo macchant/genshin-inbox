@@ -1,0 +1,441 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Akasa - Player Support</title>
+  <meta name="description" content="Akasa Game Support - Get help with your gameplay, report issues, or reach out to our team.">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <style>
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    body {
+      font-family: 'Inter', -apple-system, sans-serif;
+      background: #0a0a0f;
+      color: #fff;
+      min-height: 100vh;
+      overflow-x: hidden;
+    }
+    .bg-glow {
+      position: fixed;
+      inset: 0;
+      background:
+        radial-gradient(ellipse at 20% 20%, rgba(102, 126, 234, 0.15) 0%, transparent 50%),
+        radial-gradient(ellipse at 80% 80%, rgba(118, 75, 162, 0.15) 0%, transparent 50%);
+      pointer-events: none;
+      z-index: 0;
+    }
+    .container {
+      max-width: 1100px;
+      margin: 0 auto;
+      padding: 0 2rem;
+      position: relative;
+      z-index: 1;
+    }
+    .header {
+      padding: 2rem 0;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+    }
+    .logo {
+      display: flex;
+      align-items: center;
+      gap: 0.75rem;
+    }
+    .logo-icon {
+      width: 48px;
+      height: 48px;
+      background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+      border-radius: 12px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 1.5rem;
+    }
+    .logo-text {
+      font-size: 1.5rem;
+      font-weight: 700;
+      letter-spacing: -0.02em;
+    }
+    .logo-text span {
+      background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+      -webkit-background-clip: text;
+      background-clip: text;
+      -webkit-text-fill-color: transparent;
+    }
+    .btn {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.5rem;
+      padding: 0.75rem 1.5rem;
+      border-radius: 10px;
+      font-size: 0.9rem;
+      font-weight: 600;
+      text-decoration: none;
+      transition: all 0.2s;
+      cursor: pointer;
+      border: none;
+      font-family: inherit;
+    }
+    .btn-primary {
+      background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+      color: #fff;
+    }
+    .btn-primary:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 8px 25px rgba(102, 126, 234, 0.4);
+    }
+    .btn-outline {
+      background: transparent;
+      color: #fff;
+      border: 1px solid rgba(255, 255, 255, 0.2);
+    }
+    .btn-outline:hover {
+      background: rgba(255, 255, 255, 0.05);
+    }
+    .hero {
+      padding: 4rem 0 6rem;
+      text-align: center;
+    }
+    .hero-badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.5rem;
+      padding: 0.5rem 1rem;
+      background: rgba(102, 126, 234, 0.1);
+      border: 1px solid rgba(102, 126, 234, 0.3);
+      border-radius: 100px;
+      font-size: 0.8rem;
+      font-weight: 500;
+      color: #667eea;
+      margin-bottom: 2rem;
+    }
+    .hero-badge::before {
+      content: '';
+      width: 6px;
+      height: 6px;
+      background: #667eea;
+      border-radius: 50%;
+      animation: pulse 2s infinite;
+    }
+    @keyframes pulse { 0%, 100% { opacity: 1; } 50% { opacity: 0.4; } }
+    .hero h1 {
+      font-size: clamp(2.5rem, 6vw, 4rem);
+      font-weight: 700;
+      letter-spacing: -0.03em;
+      line-height: 1.1;
+      margin-bottom: 1.5rem;
+    }
+    .hero h1 span {
+      background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+      -webkit-background-clip: text;
+      background-clip: text;
+      -webkit-text-fill-color: transparent;
+    }
+    .hero p {
+      font-size: 1.1rem;
+      color: rgba(255, 255, 255, 0.6);
+      max-width: 600px;
+      margin: 0 auto 2.5rem;
+      line-height: 1.7;
+    }
+    .hero-buttons { display: flex; align-items: center; justify-content: center; gap: 1rem; flex-wrap: wrap; }
+    .features { padding: 4rem 0; }
+    .section-label {
+      text-align: center;
+      font-size: 0.75rem;
+      font-weight: 600;
+      text-transform: uppercase;
+      letter-spacing: 0.1em;
+      color: rgba(255, 255, 255, 0.4);
+      margin-bottom: 3rem;
+    }
+    .features-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 1.5rem; }
+    .feature-card {
+      background: rgba(255, 255, 255, 0.03);
+      border: 1px solid rgba(255, 255, 255, 0.06);
+      border-radius: 20px;
+      padding: 2rem;
+      text-align: center;
+      transition: all 0.3s;
+    }
+    .feature-card:hover { border-color: rgba(102, 126, 234, 0.3); transform: translateY(-4px); }
+    .feature-icon {
+      width: 64px;
+      height: 64px;
+      background: rgba(102, 126, 234, 0.1);
+      border-radius: 16px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      margin: 0 auto 1.5rem;
+      font-size: 1.75rem;
+    }
+    .feature-card h3 { font-size: 1.1rem; font-weight: 600; margin-bottom: 0.75rem; }
+    .feature-card p { font-size: 0.85rem; color: rgba(255, 255, 255, 0.5); line-height: 1.6; }
+    .how-it-works { padding: 4rem 0; }
+    .steps { display: flex; gap: 2rem; }
+    .step {
+      flex: 1;
+      background: rgba(255, 255, 255, 0.02);
+      border: 1px solid rgba(255, 255, 255, 0.05);
+      border-radius: 20px;
+      padding: 2rem;
+      position: relative;
+    }
+    .step-number {
+      position: absolute;
+      top: -1rem;
+      left: 2rem;
+      width: 36px;
+      height: 36px;
+      background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+      border-radius: 10px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-weight: 700;
+      font-size: 0.9rem;
+    }
+    .step h3 { font-size: 1rem; font-weight: 600; margin-top: 1rem; margin-bottom: 0.75rem; }
+    .step p { font-size: 0.85rem; color: rgba(255, 255, 255, 0.5); line-height: 1.6; }
+    .form-preview { padding: 5rem 0; }
+    .form-section {
+      background: rgba(255, 255, 255, 0.03);
+      border: 1px solid rgba(255, 255, 255, 0.08);
+      border-radius: 24px;
+      padding: 3rem;
+      text-align: center;
+    }
+    .form-section h2 { font-size: 2rem; font-weight: 700; margin-bottom: 0.5rem; }
+    .form-section > p { color: rgba(255, 255, 255, 0.5); margin-bottom: 2.5rem; }
+    .form-preview-card {
+      background: rgba(255, 255, 255, 0.05);
+      border-radius: 16px;
+      padding: 2rem;
+      max-width: 500px;
+      margin: 0 auto;
+    }
+    .form-preview-row { display: grid; grid-template-columns: 1fr 1fr; gap: 1rem; margin-bottom: 1rem; }
+    .form-preview-field { text-align: left; }
+    .form-preview-field label {
+      display: block;
+      font-size: 0.7rem;
+      font-weight: 600;
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+      color: rgba(255, 255, 255, 0.5);
+      margin-bottom: 0.5rem;
+    }
+    .form-preview-input {
+      width: 100%;
+      background: rgba(255, 255, 255, 0.05);
+      border: 1px solid rgba(255, 255, 255, 0.1);
+      border-radius: 10px;
+      padding: 0.75rem 1rem;
+      color: rgba(255, 255, 255, 0.3);
+      font-size: 0.9rem;
+    }
+    .form-preview-textarea {
+      width: 100%;
+      height: 100px;
+      background: rgba(255, 255, 255, 0.05);
+      border: 1px solid rgba(255, 255, 255, 0.1);
+      border-radius: 10px;
+      padding: 0.75rem 1rem;
+      color: rgba(255, 255, 255, 0.3);
+      font-size: 0.9rem;
+      margin-bottom: 1.5rem;
+      resize: none;
+    }
+    .form-preview-btn { width: 100%; }
+    .faq { padding: 4rem 0; }
+    .faq-list { max-width: 700px; margin: 0 auto; }
+    .faq-item {
+      border-bottom: 1px solid rgba(255, 255, 255, 0.06);
+      padding: 1.5rem 0;
+    }
+    .faq-item:first-child { border-top: 1px solid rgba(255, 255, 255, 0.06); }
+    .faq-question { font-size: 1rem; font-weight: 600; margin-bottom: 0.75rem; color: rgba(255, 255, 255, 0.9); }
+    .faq-answer { font-size: 0.9rem; color: rgba(255, 255, 255, 0.5); line-height: 1.7; }
+    .cta { padding: 5rem 0; text-align: center; }
+    .cta-box {
+      background: linear-gradient(135deg, rgba(102, 126, 234, 0.2) 0%, rgba(118, 75, 162, 0.2) 100%);
+      border: 1px solid rgba(102, 126, 234, 0.3);
+      border-radius: 24px;
+      padding: 4rem;
+    }
+    .cta h2 { font-size: 2rem; font-weight: 700; margin-bottom: 1rem; }
+    .cta p { color: rgba(255, 255, 255, 0.6); margin-bottom: 2rem; max-width: 500px; margin-left: auto; margin-right: auto; }
+    .footer { padding: 3rem 0; border-top: 1px solid rgba(255, 255, 255, 0.06); }
+    .footer-content { display: flex; align-items: center; justify-content: space-between; }
+    .footer-left { display: flex; align-items: center; gap: 0.75rem; }
+    .footer-logo {
+      width: 32px;
+      height: 32px;
+      background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+      border-radius: 8px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 1rem;
+    }
+    .footer-text { font-size: 0.85rem; color: rgba(255, 255, 255, 0.4); }
+    .footer-links { display: flex; gap: 2rem; }
+    .footer-links a { font-size: 0.85rem; color: rgba(255, 255, 255, 0.4); text-decoration: none; transition: color 0.2s; }
+    .footer-links a:hover { color: rgba(255, 255, 255, 0.8); }
+    @media (max-width: 768px) {
+      .header { flex-direction: column; gap: 1.5rem; }
+      .features-grid { grid-template-columns: 1fr; }
+      .steps { flex-direction: column; }
+      .form-preview-row { grid-template-columns: 1fr; }
+      .footer-content { flex-direction: column; gap: 1.5rem; text-align: center; }
+    }
+  </style>
+</head>
+<body>
+  <div class="bg-glow"></div>
+  <div class="container">
+    <header class="header">
+      <div class="logo">
+        <div class="logo-icon">🎮</div>
+        <div class="logo-text"><span>Akasa</span></div>
+      </div>
+      <a href="form.html" class="btn btn-primary">
+        Submit Request
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none">
+          <path d="M5 12H19M19 12L12 5M19 12L12 19" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+        </svg>
+      </a>
+    </header>
+
+    <section class="hero">
+      <div class="hero-badge">Support System Active</div>
+      <h1>Need Help with<br><span>Akasa?</span></h1>
+      <p>
+        Whether you're stuck on a quest, found a bug, or have questions about the game —
+        our support team is here to help. Submit a request and we'll get back to you.
+      </p>
+      <div class="hero-buttons">
+        <a href="form.html" class="btn btn-primary">Submit a Request</a>
+        <a href="#faq" class="btn btn-outline">View FAQ</a>
+      </div>
+    </section>
+
+    <section class="features" id="features">
+      <div class="section-label">What We Offer</div>
+      <div class="features-grid">
+        <div class="feature-card">
+          <div class="feature-icon">🎯</div>
+          <h3>Gameplay Help</h3>
+          <p>Stuck on a boss? Need tips for team building? We'll guide you through.</p>
+        </div>
+        <div class="feature-card">
+          <div class="feature-icon">🐛</div>
+          <h3>Bug Reports</h3>
+          <p>Found something broken? Report it here and we'll investigate ASAP.</p>
+        </div>
+        <div class="feature-card">
+          <div class="feature-icon">💬</div>
+          <h3>General Inquiries</h3>
+          <p>Questions about the game, events, or features? Just ask!</p>
+        </div>
+      </div>
+    </section>
+
+    <section class="how-it-works" id="how">
+      <div class="section-label">How It Works</div>
+      <div class="steps">
+        <div class="step">
+          <div class="step-number">1</div>
+          <h3>Fill the Form</h3>
+          <p>Enter your in-game name, UID, and describe your issue or question.</p>
+        </div>
+        <div class="step">
+          <div class="step-number">2</div>
+          <h3>We Review It</h3>
+          <p>Our team reviews every submission and prepares a response.</p>
+        </div>
+        <div class="step">
+          <div class="step-number">3</div>
+          <h3>Get Your Answer</h3>
+          <p>Check back here with your UID to see the response.</p>
+        </div>
+      </div>
+    </section>
+
+    <section class="form-preview" id="submit">
+      <div class="form-section">
+        <h2>Submit a Support Request</h2>
+        <p>Quick and easy — no account needed</p>
+        <div class="form-preview-card">
+          <div class="form-preview-row">
+            <div class="form-preview-field">
+              <label>In-Game Name</label>
+              <div class="form-preview-input">YourName</div>
+            </div>
+            <div class="form-preview-field">
+              <label>UID</label>
+              <div class="form-preview-input">123456</div>
+            </div>
+          </div>
+          <div class="form-preview-field">
+            <label>Message</label>
+            <div class="form-preview-textarea">Describe your issue...</div>
+          </div>
+          <a href="form.html" class="btn btn-primary form-preview-btn">Go to Form</a>
+        </div>
+      </div>
+    </section>
+
+    <section class="faq" id="faq">
+      <div class="section-label">Frequently Asked Questions</div>
+      <div class="faq-list">
+        <div class="faq-item">
+          <div class="faq-question">How do I find my UID?</div>
+          <div class="faq-answer">Open your game profile by tapping your avatar. Your UID is displayed below your name and level.</div>
+        </div>
+        <div class="faq-item">
+          <div class="faq-question">How long until I get a response?</div>
+          <div class="faq-answer">We typically respond within 24 hours. For urgent issues, please be detailed in your message.</div>
+        </div>
+        <div class="faq-item">
+          <div class="faq-question">Can I check my previous requests?</div>
+          <div class="faq-answer">Yes! Enter your UID on the inbox page to see all your submissions and responses.</div>
+        </div>
+        <div class="faq-item">
+          <div class="faq-question">What should I include in my message?</div>
+          <div class="faq-answer">Be as specific as possible. Include what happened, where it happened (quest name, location), and what you expected.</div>
+        </div>
+        <div class="faq-item">
+          <div class="faq-question">Is my information safe?</div>
+          <div class="faq-answer">Absolutely. We only use your in-game name and UID to identify your account. No personal data is stored.</div>
+        </div>
+      </div>
+    </section>
+
+    <section class="cta">
+      <div class="cta-box">
+        <h2>Ready to Get Help?</h2>
+        <p>Submit your request and our team will assist you as soon as possible.</p>
+        <a href="form.html" class="btn btn-primary">Submit a Request</a>
+      </div>
+    </section>
+
+    <footer class="footer">
+      <div class="footer-content">
+        <div class="footer-left">
+          <div class="footer-logo">🎮</div>
+          <span class="footer-text">© 2026 Akasa. All rights reserved.</span>
+        </div>
+        <div class="footer-links">
+          <a href="form.html">Support</a>
+          <a href="inbox.html">Check Messages</a>
+          <a href="admin.html">Admin</a>
+        </div>
+      </div>
+    </footer>
+  </div>
+</body>
+</html>
