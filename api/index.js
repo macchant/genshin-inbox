@@ -106,16 +106,32 @@ module.exports = async (req, res) => {
 
         // Notify admin via Telegram
         if (CONFIG.telegramBotToken && CONFIG.telegramAdminChatId) {
-          console.log('Sending Telegram notification...');
           const tgMsg = `🌐 <b>New Support Request!</b>\n\n` +
             `👤 <b>Player:</b> ${msg.player_name}\n` +
             `🆔 <b>UID:</b> <code>${msg.uid}</code>\n\n` +
             `💬 <b>Message:</b>\n${msg.message}\n\n` +
             `📅 <b>Time:</b> ${new Date().toLocaleString()}\n` +
             `📎 <b>Ref:</b> <code>#${msg.id.slice(0, 8)}</code>`;
-          sendTelegramNotification(tgMsg).catch(e => console.error('Telegram error:', e));
-        } else {
-          console.log('Telegram not configured:', { hasToken: !!CONFIG.telegramBotToken, hasChatId: !!CONFIG.telegramAdminChatId });
+
+          // Send Telegram notification - await it properly
+          try {
+            const tgRes = await fetch(`https://api.telegram.org/bot${CONFIG.telegramBotToken}/sendMessage`, {
+              method: 'POST',
+              headers: { 'Content-Type': 'application/json' },
+              body: JSON.stringify({
+                chat_id: CONFIG.telegramAdminChatId,
+                text: tgMsg,
+                parse_mode: 'HTML'
+              })
+            });
+            const tgData = await tgRes.json();
+            console.log('Telegram response:', tgData);
+            if (!tgData.ok) {
+              console.error('Telegram error:', tgData.description);
+            }
+          } catch (e) {
+            console.error('Telegram send error:', e);
+          }
         }
 
         return res.status(200).json({
@@ -237,36 +253,45 @@ module.exports = async (req, res) => {
 
       case 'test': {
         // Debug endpoint
-        console.log('=== TEST ENDPOINT ===');
-        console.log('SUPABASE_URL:', CONFIG.supabaseUrl ? 'SET' : 'MISSING');
-        console.log('SUPABASE_KEY:', CONFIG.supabaseKey ? 'SET' : 'MISSING');
-        console.log('TELEGRAM_TOKEN:', CONFIG.telegramBotToken ? 'SET' : 'MISSING');
-        console.log('TELEGRAM_CHAT_ID:', CONFIG.telegramAdminChatId ? 'SET' : 'MISSING');
-        console.log('ADMIN_TOKEN:', CONFIG.adminToken ? 'SET' : 'MISSING');
-
-        // Try fetching messages
-        try {
-          const testMsg = await supabaseFetch('messages?select=*&limit=1');
-          console.log('Supabase connection: SUCCESS', testMsg);
-        } catch (e) {
-          console.log('Supabase connection: FAILED', e.message);
-        }
-
-        // Try Telegram
-        try {
-          await fetch(`https://api.telegram.org/bot${CONFIG.telegramBotToken}/getMe`);
-          console.log('Telegram bot: VALID');
-        } catch (e) {
-          console.log('Telegram bot: FAILED', e.message);
-        }
-
-        return res.status(200).json({
+        const results = {
           supabaseUrl: !!CONFIG.supabaseUrl,
           supabaseKey: !!CONFIG.supabaseKey,
           telegramToken: !!CONFIG.telegramBotToken,
           telegramChatId: !!CONFIG.telegramAdminChatId,
           adminToken: !!CONFIG.adminToken
-        });
+        };
+
+        // Try fetching messages
+        try {
+          const testMsg = await supabaseFetch('messages?select=*&limit=1');
+          results.supabaseStatus = 'OK';
+          results.messageCount = 'connected';
+        } catch (e) {
+          results.supabaseStatus = 'FAILED: ' + e.message;
+        }
+
+        // Try Telegram
+        try {
+          const botInfo = await fetch(`https://api.telegram.org/bot${CONFIG.telegramBotToken}/getMe`).then(r => r.json());
+          results.telegramBot = botInfo.ok ? 'OK (@' + botInfo.result.username + ')' : 'FAILED';
+
+          // Send test message
+          const testMsg = await fetch(`https://api.telegram.org/bot${CONFIG.telegramBotToken}/sendMessage`, {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({
+              chat_id: CONFIG.telegramAdminChatId,
+              text: '🧪 <b>Test Message!</b>\n\nBot is working correctly!',
+              parse_mode: 'HTML'
+            })
+          }).then(r => r.json());
+
+          results.telegramSend = testMsg.ok ? 'OK - Check your Telegram!' : 'FAILED: ' + testMsg.description;
+        } catch (e) {
+          results.telegramSend = 'ERROR: ' + e.message;
+        }
+
+        return res.status(200).json(results);
       }
     }
   } catch (error) {
