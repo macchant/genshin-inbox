@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Test API</title>
+  <style>
+    body { font-family: monospace; background: #1a1a2e; color: #f0f0f5; padding: 2rem; }
+    button { padding: 1rem 2rem; margin: 1rem 0; cursor: pointer; }
+    pre { background: #2a2a4a; padding: 1rem; border-radius: 8px; overflow: auto; }
+    .ok { color: #5fb9b0; }
+    .fail { color: #ff6b6b; }
+  </style>
+</head>
+<body>
+  <h1>API Test</h1>
+  <button onclick="testAPI()">Test API</button>
+  <button onclick="submitTest()">Submit Test Message</button>
+  <div id="result"></div>
+
+  <script>
+    async function testAPI() {
+      document.getElementById('result').innerHTML = '<p>Testing...</p>';
+      try {
+        const res = await fetch('/api', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ action: 'test' })
+        });
+        const data = await res.json();
+        document.getElementById('result').innerHTML = '<pre>' + JSON.stringify(data, null, 2) + '</pre>';
+      } catch (e) {
+        document.getElementById('result').innerHTML = '<p class="fail">Error: ' + e.message + '</p>';
+      }
+    }
+
+    async function submitTest() {
+      document.getElementById('result').innerHTML = '<p>Submitting test message...</p>';
+      try {
+        const res = await fetch('/api', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({
+            action: 'submit',
+            playerName: 'TestUser',
+            uid: '123456',
+            message: 'This is a test message!',
+            contactMethod: ''
+          })
+        });
+        const data = await res.json();
+        document.getElementById('result').innerHTML = '<pre>' + JSON.stringify(data, null, 2) + '</pre>';
+      } catch (e) {
+        document.getElementById('result').innerHTML = '<p class="fail">Error: ' + e.message + '</p>';
+      }
+    }
+  </script>
+</body>
+</html>
