@@ -3,384 +3,95 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Support - Admin</title></title>
+  <title>Support - Admin</title>
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link href="https://fonts.googleapis.com/css2?family=Quicksand:wght@400;500;600;700&family=Nunito:wght@400;600;700&display=swap" rel="stylesheet">
   <style>
-    * { box-sizing: border-box; margin: 0; padding: 0; }
-    :root {
-      --bg: #1a1a2e;
-      --bg-soft: #232342;
-      --card: #2a2a4a;
-      --accent: #5fb9b0;
-      --accent-light: #7dd3cb;
-      --gold: #e8c87a;
-      --pink: #e8a0bf;
-      --purple: #a78bfa;
-      --text: #f0f0f5;
-      --text-soft: #a0a0b5;
-    }
-    body {
-      font-family: 'Nunito', sans-serif;
-      background: var(--bg);
-      color: var(--text);
-      min-height: 100vh;
-    }
-    .header {
-      background: var(--bg-soft);
-      border-bottom: 1px solid rgba(255,255,255,0.06);
-      padding: 1rem 1.5rem;
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      position: sticky;
-      top: 0;
-      z-index: 100;
-    }
-    .logo {
-      display: flex;
-      align-items: center;
-      gap: 0.6rem;
-    }
-    .logo-icon {
-      width: 36px;
-      height: 36px;
-      background: linear-gradient(135deg, var(--accent) 0%, var(--accent-light) 100%);
-      border-radius: 50%;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      font-size: 1rem;
-    }
-    .logo span {
-      font-family: 'Quicksand', sans-serif;
-      font-size: 1.1rem;
-      font-weight: 700;
-    }
-    .header-right {
-      display: flex;
-      align-items: center;
-      gap: 1rem;
-    }
-    .status {
-      display: flex;
-      align-items: center;
-      gap: 0.4rem;
-      font-size: 0.8rem;
-      color: var(--text-soft);
-      background: rgba(95, 185, 176, 0.1);
-      padding: 0.4rem 0.8rem;
-      border-radius: 20px;
-    }
-    .status-dot {
-      width: 8px;
-      height: 8px;
-      background: var(--accent);
-      border-radius: 50%;
-      animation: pulse 2s infinite;
-    }
-    @keyframes pulse { 0%, 100% { opacity: 1; } 50% { opacity: 0.4; } }
-    .btn {
-      padding: 0.5rem 1rem;
-      border: none;
-      border-radius: 8px;
-      font-size: 0.8rem;
-      font-weight: 600;
-      cursor: pointer;
-      transition: all 0.2s;
-      font-family: inherit;
-    }
-    .btn-secondary {
-      background: rgba(255,255,255,0.05);
-      color: var(--text);
-      border: 1px solid rgba(255,255,255,0.1);
-    }
-    .btn-secondary:hover { background: rgba(255,255,255,0.1); }
-    .btn-primary {
-      background: linear-gradient(135deg, var(--accent) 0%, var(--accent-light) 100%);
-      color: var(--bg);
-    }
-    .btn-primary:hover { transform: translateY(-1px); box-shadow: 0 4px 12px rgba(95, 185, 176, 0.3); }
-    .main { padding: 1.5rem; max-width: 1200px; margin: 0 auto; }
-    .stats {
-      display: grid;
-      grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
-      gap: 1rem;
-      margin-bottom: 1.5rem;
-    }
-    .stat {
-      background: var(--card);
-      border: 1px solid rgba(255,255,255,0.06);
-      border-radius: 14px;
-      padding: 1.2rem;
-    }
-    .stat-label {
-      font-size: 0.7rem;
-      font-weight: 600;
-      text-transform: uppercase;
-      letter-spacing: 0.05em;
-      color: var(--text-soft);
-      margin-bottom: 0.4rem;
-    }
-    .stat-value {
-      font-family: 'Quicksand', sans-serif;
-      font-size: 1.8rem;
-      font-weight: 700;
-    }
-    .stat-value.total { color: var(--purple); }
-    .stat-value.pending { color: var(--gold); }
-    .stat-value.replied { color: var(--accent); }
-    .filters {
-      display: flex;
-      gap: 0.6rem;
-      margin-bottom: 1.5rem;
-      flex-wrap: wrap;
-    }
-    .filter-btn {
-      padding: 0.5rem 1rem;
-      background: rgba(255,255,255,0.03);
-      border: 1px solid rgba(255,255,255,0.08);
-      border-radius: 50px;
-      color: var(--text-soft);
-      font-size: 0.75rem;
-      font-weight: 600;
-      cursor: pointer;
-      transition: all 0.2s;
-      font-family: inherit;
-    }
-    .filter-btn:hover { background: rgba(255,255,255,0.06); color: var(--text); }
-    .filter-btn.active {
-      background: linear-gradient(135deg, var(--accent) 0%, var(--accent-light) 100%);
-      color: var(--bg);
-      border-color: transparent;
-    }
-    .messages { display: flex; flex-direction: column; gap: 1rem; }
-    .message {
-      background: var(--card);
-      border: 1px solid rgba(255,255,255,0.06);
-      border-radius: 14px;
-      overflow: hidden;
-    }
-    .message.pending { border-left: 3px solid var(--gold); }
-    .message.replied { border-left: 3px solid var(--accent); }
-    .message-header {
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      padding: 1rem 1.2rem;
-      border-bottom: 1px solid rgba(255,255,255,0.04);
-    }
-    .message-meta { display: flex; align-items: center; gap: 1rem; }
-    .message-player { font-weight: 600; font-size: 0.95rem; }
-    .message-uid {
-      font-size: 0.75rem;
-      color: var(--text-soft);
-      background: rgba(255,255,255,0.05);
-      padding: 0.2rem 0.5rem;
-      border-radius: 4px;
-      font-family: monospace;
-    }
-    .message-source { font-size: 0.65rem; text-transform: uppercase; letter-spacing: 0.05em; }
-    .message-source.web { color: var(--accent); }
-    .message-source.telegram { color: var(--purple); }
-    .message-status {
-      font-size: 0.65rem;
-      font-weight: 600;
-      text-transform: uppercase;
-      padding: 0.25rem 0.6rem;
-      border-radius: 20px;
-    }
-    .message.pending .message-status { background: rgba(232, 200, 122, 0.15); color: var(--gold); }
-    .message.replied .message-status { background: rgba(95, 185, 176, 0.15); color: var(--accent); }
-    .message-body { padding: 1rem 1.2rem; }
-    .message-content { font-size: 0.85rem; color: var(--text); line-height: 1.6; margin-bottom: 0.8rem; }
-    .message-contact { font-size: 0.75rem; color: var(--text-soft); margin-bottom: 0.8rem; }
-    .message-reply {
-      background: rgba(95, 185, 176, 0.08);
-      border: 1px solid rgba(95, 185, 176, 0.15);
-      border-radius: 8px;
-      padding: 0.8rem;
-    }
-    .message-reply-label { font-size: 0.65rem; font-weight: 600; color: var(--accent); margin-bottom: 0.3rem; }
-    .message-reply-content { font-size: 0.8rem; color: var(--text); line-height: 1.5; }
-    .message-footer {
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      padding: 0.8rem 1.2rem;
-      background: rgba(255,255,255,0.02);
-    }
-    .message-time { font-size: 0.7rem; color: var(--text-soft); }
-    .message-actions { display: flex; gap: 0.5rem; }
-    .message-actions .btn { padding: 0.4rem 0.8rem; font-size: 0.7rem; }
-    .modal {
-      position: fixed;
-      inset: 0;
-      background: rgba(0,0,0,0.8);
-      display: none;
-      align-items: center;
-      justify-content: center;
-      z-index: 1000;
-      padding: 1rem;
-    }
-    .modal.show { display: flex; }
-    .modal-content {
-      background: var(--card);
-      border: 1px solid rgba(255,255,255,0.1);
-      border-radius: 16px;
-      width: 100%;
-      max-width: 480px;
-      max-height: 90vh;
-      overflow: auto;
-    }
-    .modal-header {
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      padding: 1.2rem;
-      border-bottom: 1px solid rgba(255,255,255,0.06);
-    }
-    .modal-title { font-family: 'Quicksand', sans-serif; font-size: 1rem; font-weight: 700; }
-    .modal-close {
-      width: 32px;
-      height: 32px;
-      background: rgba(255,255,255,0.05);
-      border: none;
-      border-radius: 8px;
-      color: var(--text-soft);
-      cursor: pointer;
-      font-size: 1.2rem;
-    }
-    .modal-close:hover { background: rgba(255,255,255,0.1); color: var(--text); }
-    .modal-body { padding: 1.2rem; }
-    .modal-original {
-      background: rgba(255,255,255,0.03);
-      border-radius: 10px;
-      padding: 1rem;
-      margin-bottom: 1rem;
-    }
-    .modal-original-label { font-size: 0.7rem; font-weight: 600; color: var(--text-soft); margin-bottom: 0.3rem; }
-    .modal-original-content { font-size: 0.85rem; color: var(--text); line-height: 1.5; }
-    .form-group { margin-bottom: 1rem; }
-    .form-group label { display: block; font-size: 0.75rem; font-weight: 600; color: var(--text-soft); margin-bottom: 0.4rem; }
-    .form-group textarea {
-      width: 100%;
-      background: rgba(255,255,255,0.05);
-      border: 1px solid rgba(255,255,255,0.1);
-      border-radius: 10px;
-      padding: 0.8rem;
-      color: var(--text);
-      font-size: 0.85rem;
-      font-family: inherit;
-      resize: vertical;
-      min-height: 100px;
-    }
-    .form-group textarea:focus { outline: none; border-color: var(--accent); }
-    .modal-footer {
-      display: flex;
-      gap: 0.8rem;
-      justify-content: flex-end;
-      padding: 1.2rem;
-      border-top: 1px solid rgba(255,255,255,0.06);
-    }
-    .login {
-      min-height: 100vh;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      padding: 1.5rem;
-    }
-    .login-card {
-      background: var(--card);
-      border: 1px solid rgba(255,255,255,0.08);
-      border-radius: 20px;
-      padding: 2rem;
-      width: 100%;
-      max-width: 380px;
-      text-align: center;
-    }
-    .login-icon {
-      width: 64px;
-      height: 64px;
-      background: linear-gradient(135deg, var(--accent) 0%, var(--accent-light) 100%);
-      border-radius: 50%;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      margin: 0 auto 1.5rem;
-      font-size: 1.8rem;
-    }
-    .login h1 { font-family: 'Quicksand', sans-serif; font-size: 1.4rem; margin-bottom: 0.3rem; }
-    .login p { font-size: 0.85rem; color: var(--text-soft); margin-bottom: 1.5rem; }
-    .login input {
-      width: 100%;
-      background: rgba(255,255,255,0.05);
-      border: 1px solid rgba(255,255,255,0.1);
-      border-radius: 10px;
-      padding: 0.9rem;
-      color: var(--text);
-      font-size: 1rem;
-      font-family: inherit;
-      text-align: center;
-      margin-bottom: 1rem;
-    }
-    .login input:focus { outline: none; border-color: var(--accent); }
-    .login .btn { width: 100%; padding: 1rem; }
-    .empty { text-align: center; padding: 3rem; color: var(--text-soft); }
-    .empty-icon { font-size: 3rem; margin-bottom: 1rem; opacity: 0.4; }
-    .empty h3 { font-family: 'Quicksand', sans-serif; font-size: 1rem; color: var(--text); margin-bottom: 0.3rem; }
-    .loading { display: flex; align-items: center; justify-content: center; padding: 3rem; }
-    .spinner {
-      width: 36px;
-      height: 36px;
-      border: 3px solid rgba(95, 185, 176, 0.2);
-      border-top-color: var(--accent);
-      border-radius: 50%;
-      animation: spin 1s linear infinite;
-    }
-    @keyframes spin { to { transform: rotate(360deg); } }
-    .hidden { display: none !important; }
-    .ref-id { font-family: monospace; font-size: 0.7rem; color: var(--text-soft); }
-    .toast {
-      position: fixed;
-      bottom: 1.5rem;
-      right: 1.5rem;
-      background: var(--card);
-      border: 1px solid rgba(95, 185, 176, 0.3);
-      border-radius: 10px;
-      padding: 1rem 1.2rem;
-      display: flex;
-      align-items: center;
-      gap: 0.6rem;
-      box-shadow: 0 8px 30px rgba(0,0,0,0.3);
-      transform: translateY(100px);
-      opacity: 0;
-      transition: all 0.3s;
-      z-index: 1001;
-    }
-    .toast.show { transform: translateY(0); opacity: 1; }
-    .toast-icon {
-      width: 24px;
-      height: 24px;
-      background: rgba(95, 185, 176, 0.2);
-      border-radius: 50%;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      color: var(--accent);
-    }
-    @media (max-width: 768px) {
-      .stats { grid-template-columns: repeat(2, 1fr); }
-      .message-header { flex-direction: column; align-items: flex-start; gap: 0.8rem; }
-      .message-footer { flex-direction: column; gap: 0.8rem; }
-      .message-actions { width: 100%; }
-      .message-actions .btn { flex: 1; }
-    }
+    *{box-sizing:border-box;margin:0;padding:0}
+    :root{--bg:#1a1a2e;--card:#2a2a4a;--accent:#5fb9b0;--accent-light:#7dd3cb;--gold:#e8c87a;--purple:#a78bfa;--text:#f0f0f5;--text-soft:#a0a0b5}
+    body{font-family:'Nunito',sans-serif;background:var(--bg);color:var(--text);min-height:100vh}
+    .header{background:#232342;border-bottom:1px solid rgba(255,255,255,0.06);padding:1rem 1.5rem;display:flex;align-items:center;justify-content:space-between;position:sticky;top:0;z-index:100}
+    .logo{display:flex;align-items:center;gap:0.6rem}
+    .logo-icon{width:36px;height:36px;background:linear-gradient(135deg,var(--accent),var(--accent-light));border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:1rem}
+    .logo span{font-family:'Quicksand',sans-serif;font-size:1.1rem;font-weight:700}
+    .header-right{display:flex;align-items:center;gap:1rem}
+    .status{display:flex;align-items:center;gap:0.4rem;font-size:0.8rem;color:var(--text-soft);background:rgba(95,185,176,0.1);padding:0.4rem 0.8rem;border-radius:20px}
+    .status-dot{width:8px;height:8px;background:var(--accent);border-radius:50%;animation:pulse 2s infinite}
+    @keyframes pulse{0%,100%{opacity:1}50%{opacity:0.4}}
+    .btn{padding:0.5rem 1rem;border:none;border-radius:8px;font-size:0.8rem;font-weight:600;cursor:pointer;font-family:inherit}
+    .btn-secondary{background:rgba(255,255,255,0.05);color:var(--text);border:1px solid rgba(255,255,255,0.1)}
+    .btn-secondary:hover{background:rgba(255,255,255,0.1)}
+    .btn-primary{background:linear-gradient(135deg,var(--accent),var(--accent-light));color:var(--bg)}
+    .btn-primary:hover{transform:translateY(-1px)}
+    .main{padding:1.5rem;max-width:1200px;margin:0 auto}
+    .stats{display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));gap:1rem;margin-bottom:1.5rem}
+    .stat{background:var(--card);border:1px solid rgba(255,255,255,0.06);border-radius:14px;padding:1.2rem}
+    .stat-label{font-size:0.7rem;font-weight:600;text-transform:uppercase;color:var(--text-soft);margin-bottom:0.4rem}
+    .stat-value{font-family:'Quicksand',sans-serif;font-size:1.8rem;font-weight:700}
+    .stat-value.total{color:var(--purple)}.stat-value.pending{color:var(--gold)}.stat-value.replied{color:var(--accent)}
+    .filters{display:flex;gap:0.6rem;margin-bottom:1.5rem;flex-wrap:wrap}
+    .filter-btn{padding:0.5rem 1rem;background:rgba(255,255,255,0.03);border:1px solid rgba(255,255,255,0.08);border-radius:50px;color:var(--text-soft);font-size:0.75rem;font-weight:600;cursor:pointer;font-family:inherit}
+    .filter-btn:hover{background:rgba(255,255,255,0.06);color:var(--text)}
+    .filter-btn.active{background:linear-gradient(135deg,var(--accent),var(--accent-light));color:var(--bg);border-color:transparent}
+    .messages{display:flex;flex-direction:column;gap:1rem}
+    .message{background:var(--card);border:1px solid rgba(255,255,255,0.06);border-radius:14px;overflow:hidden}
+    .message.pending{border-left:3px solid var(--gold)}.message.replied{border-left:3px solid var(--accent)}
+    .message-header{display:flex;align-items:center;justify-content:space-between;padding:1rem 1.2rem;border-bottom:1px solid rgba(255,255,255,0.04)}
+    .message-meta{display:flex;align-items:center;gap:1rem}
+    .message-player{font-weight:600;font-size:0.95rem}
+    .message-uid{font-size:0.75rem;color:var(--text-soft);background:rgba(255,255,255,0.05);padding:0.2rem 0.5rem;border-radius:4px;font-family:monospace}
+    .message-source{font-size:0.65rem;text-transform:uppercase}
+    .message-source.web{color:var(--accent)}.message-source.telegram{color:var(--purple)}
+    .message-status{font-size:0.65rem;font-weight:600;text-transform:uppercase;padding:0.25rem 0.6rem;border-radius:20px}
+    .message.pending .message-status{background:rgba(232,200,122,0.15);color:var(--gold)}
+    .message.replied .message-status{background:rgba(95,185,176,0.15);color:var(--accent)}
+    .message-body{padding:1rem 1.2rem}
+    .message-content{font-size:0.85rem;line-height:1.6;margin-bottom:0.8rem}
+    .message-contact{font-size:0.75rem;color:var(--text-soft);margin-bottom:0.8rem}
+    .message-reply{background:rgba(95,185,176,0.08);border:1px solid rgba(95,185,176,0.15);border-radius:8px;padding:0.8rem}
+    .message-reply-label{font-size:0.65rem;font-weight:600;color:var(--accent);margin-bottom:0.3rem}
+    .message-reply-content{font-size:0.8rem;line-height:1.5}
+    .message-footer{display:flex;align-items:center;justify-content:space-between;padding:0.8rem 1.2rem;background:rgba(255,255,255,0.02)}
+    .message-time{font-size:0.7rem;color:var(--text-soft)}
+    .message-actions .btn{padding:0.4rem 0.8rem;font-size:0.7rem}
+    .modal{position:fixed;inset:0;background:rgba(0,0,0,0.8);display:none;align-items:center;justify-content:center;z-index:1000;padding:1rem}
+    .modal.show{display:flex}
+    .modal-content{background:var(--card);border:1px solid rgba(255,255,255,0.1);border-radius:16px;width:100%;max-width:480px}
+    .modal-header{display:flex;align-items:center;justify-content:space-between;padding:1.2rem;border-bottom:1px solid rgba(255,255,255,0.06)}
+    .modal-title{font-family:'Quicksand',sans-serif;font-size:1rem;font-weight:700}
+    .modal-close{width:32px;height:32px;background:rgba(255,255,255,0.05);border:none;border-radius:8px;color:var(--text-soft);cursor:pointer;font-size:1.2rem}
+    .modal-body{padding:1.2rem}
+    .modal-original{background:rgba(255,255,255,0.03);border-radius:10px;padding:1rem;margin-bottom:1rem}
+    .modal-original-label{font-size:0.7rem;font-weight:600;color:var(--text-soft);margin-bottom:0.3rem}
+    .modal-original-content{font-size:0.85rem;line-height:1.5}
+    .form-group{margin-bottom:1rem}
+    .form-group label{display:block;font-size:0.75rem;font-weight:600;color:var(--text-soft);margin-bottom:0.4rem}
+    .form-group textarea{width:100%;background:rgba(255,255,255,0.05);border:1px solid rgba(255,255,255,0.1);border-radius:10px;padding:0.8rem;color:var(--text);font-size:0.85rem;font-family:inherit;resize:vertical;min-height:100px}
+    .form-group textarea:focus{outline:none;border-color:var(--accent)}
+    .modal-footer{display:flex;gap:0.8rem;justify-content:flex-end;padding:1.2rem;border-top:1px solid rgba(255,255,255,0.06)}
+    .login{min-height:100vh;display:flex;align-items:center;justify-content:center;padding:1.5rem}
+    .login-card{background:var(--card);border:1px solid rgba(255,255,255,0.08);border-radius:20px;padding:2rem;width:100%;max-width:380px;text-align:center}
+    .login-icon{width:64px;height:64px;background:linear-gradient(135deg,var(--accent),var(--accent-light));border-radius:50%;display:flex;align-items:center;justify-content:center;margin:0 auto 1.5rem;font-size:1.8rem}
+    .login h1{font-family:'Quicksand',sans-serif;font-size:1.4rem;margin-bottom:0.3rem}
+    .login p{font-size:0.85rem;color:var(--text-soft);margin-bottom:1.5rem}
+    .login input{width:100%;background:rgba(255,255,255,0.05);border:1px solid rgba(255,255,255,0.1);border-radius:10px;padding:0.9rem;color:var(--text);font-size:1rem;font-family:inherit;text-align:center;margin-bottom:1rem}
+    .login input:focus{outline:none;border-color:var(--accent)}
+    .login .btn{width:100%;padding:1rem}
+    .empty{text-align:center;padding:3rem;color:var(--text-soft)}
+    .empty-icon{font-size:3rem;margin-bottom:1rem;opacity:0.4}
+    .empty h3{font-family:'Quicksand',sans-serif;font-size:1rem;margin-bottom:0.3rem}
+    .loading{display:flex;align-items:center;justify-content:center;padding:3rem}
+    .spinner{width:36px;height:36px;border:3px solid rgba(95,185,176,0.2);border-top-color:var(--accent);border-radius:50%;animation:spin 1s linear infinite}
+    @keyframes spin{to{transform:rotate(360deg)}}
+    .hidden{display:none!important}
+    .ref-id{font-family:monospace;font-size:0.7rem;color:var(--text-soft)}
+    .toast{position:fixed;bottom:1.5rem;right:1.5rem;background:var(--card);border:1px solid rgba(95,185,176,0.3);border-radius:10px;padding:1rem 1.2rem;display:flex;align-items:center;gap:0.6rem;box-shadow:0 8px 30px rgba(0,0,0,0.3);transform:translateY(100px);opacity:0;transition:all 0.3s;z-index:1001}
+    .toast.show{transform:translateY(0);opacity:1}
+    .toast-icon{width:24px;height:24px;background:rgba(95,185,176,0.2);border-radius:50%;display:flex;align-items:center;justify-content:center;color:var(--accent)}
+    @media(max-width:768px){.stats{grid-template-columns:repeat(2,1fr)}.message-header{flex-direction:column;align-items:flex-start;gap:0.8rem}.message-footer{flex-direction:column;gap:0.8rem}.message-actions{width:100%}.message-actions .btn{flex:1}}
   </style>
 </head>
 <body>
-
-  <!-- Login -->
   <div class="login" id="loginScreen">
     <div class="login-card">
       <div class="login-icon">✨</div>
@@ -393,7 +104,6 @@
     </div>
   </div>
 
-  <!-- Dashboard -->
   <div id="dashboard" class="hidden">
     <header class="header">
       <div class="logo">
@@ -401,57 +111,33 @@
         <span>Support Admin</span>
       </div>
       <div class="header-right">
-        <div class="status">
-          <span class="status-dot"></span>
-          <span>Live</span>
-        </div>
-        <button class="btn btn-secondary" onclick="logout()">Logout</button>
+        <div class="status"><span class="status-dot"></span><span>Live</span></div>
+        <button class="btn btn-secondary" id="logoutBtn">Logout</button>
       </div>
     </header>
-
     <main class="main">
-      <div class="stats" id="statsGrid">
-        <div class="stat">
-          <div class="stat-label">Total</div>
-          <div class="stat-value total" id="statTotal">0</div>
-        </div>
-        <div class="stat">
-          <div class="stat-label">Pending</div>
-          <div class="stat-value pending" id="statPending">0</div>
-        </div>
-        <div class="stat">
-          <div class="stat-label">Replied</div>
-          <div class="stat-value replied" id="statReplied">0</div>
-        </div>
-        <div class="stat">
-          <div class="stat-label">Today</div>
-          <div class="stat-value total" id="statToday">0</div>
-        </div>
-        <div class="stat">
-          <div class="stat-label">This Week</div>
-          <div class="stat-value total" id="statWeek">0</div>
-        </div>
+      <div class="stats">
+        <div class="stat"><div class="stat-label">Total</div><div class="stat-value total" id="statTotal">0</div></div>
+        <div class="stat"><div class="stat-label">Pending</div><div class="stat-value pending" id="statPending">0</div></div>
+        <div class="stat"><div class="stat-label">Replied</div><div class="stat-value replied" id="statReplied">0</div></div>
+        <div class="stat"><div class="stat-label">Today</div><div class="stat-value total" id="statToday">0</div></div>
+        <div class="stat"><div class="stat-label">This Week</div><div class="stat-value total" id="statWeek">0</div></div>
       </div>
-
       <div class="filters">
         <button class="filter-btn active" data-filter="all">All</button>
         <button class="filter-btn" data-filter="pending">Pending</button>
         <button class="filter-btn" data-filter="replied">Replied</button>
         <button class="filter-btn" data-filter="web">Web Only</button>
       </div>
-
-      <div class="messages" id="messagesList">
-        <div class="loading"><div class="spinner"></div></div>
-      </div>
+      <div class="messages" id="messagesList"><div class="loading"><div class="spinner"></div></div></div>
     </main>
   </div>
 
-  <!-- Reply Modal -->
   <div class="modal" id="replyModal">
     <div class="modal-content">
       <div class="modal-header">
-        <span class="modal-title">💬 Reply to Message</span>
-        <button class="modal-close" onclick="closeModal()">&times;</button>
+        <span class="modal-title">Reply to Message</span>
+        <button class="modal-close" id="closeModalBtn">x</button>
       </div>
       <div class="modal-body">
         <div class="modal-original">
@@ -464,13 +150,12 @@
         </div>
       </div>
       <div class="modal-footer">
-        <button class="btn btn-secondary" onclick="closeModal()">Cancel</button>
-        <button class="btn btn-primary" onclick="sendReply()">✨ Send Reply</button>
+        <button class="btn btn-secondary" id="cancelReplyBtn">Cancel</button>
+        <button class="btn btn-primary" id="sendReplyBtn">Send Reply</button>
       </div>
     </div>
   </div>
 
-  <!-- Toast -->
   <div class="toast" id="toast">
     <div class="toast-icon">✓</div>
     <span id="toastMessage">Success!</span>
@@ -503,12 +188,12 @@
       loadMessages();
     });
 
-    function logout() {
+    document.getElementById('logoutBtn').addEventListener('click', () => {
       token = '';
       localStorage.removeItem('admin_token');
       loginScreen.classList.remove('hidden');
       dashboard.classList.add('hidden');
-    }
+    });
 
     function showDashboard() {
       loginScreen.classList.add('hidden');
@@ -543,8 +228,8 @@
         });
         const d = await r.json();
         if (d.success) { messages = d.messages; renderMessages(); }
-        else { messagesList.innerHTML = '<div class="empty"><div class="empty-icon">😢</div><h3>Error loading</h3></div>'; }
-      } catch (e) { messagesList.innerHTML = '<div class="empty"><div class="empty-icon">😢</div><h3>Connection error</h3></div>'; }
+        else { messagesList.innerHTML = '<div class="empty"><div class="empty-icon">Error</div><h3>Could not load messages</h3></div>'; }
+      } catch (e) { messagesList.innerHTML = '<div class="empty"><div class="empty-icon">Error</div><h3>Connection error</h3></div>'; }
     }
 
     function renderMessages() {
@@ -554,33 +239,47 @@
       else if (currentFilter === 'web') filtered = messages.filter(m => m.sender_type === 'web');
 
       if (filtered.length === 0) {
-        messagesList.innerHTML = '<div class="empty"><div class="empty-icon">📭</div><h3>No messages yet</h3><p>Messages will appear here</p></div>';
+        messagesList.innerHTML = '<div class="empty"><div class="empty-icon">📭</div><h3>No messages yet</h3></div>';
         return;
       }
 
-      messagesList.innerHTML = filtered.map(msg => `
-        <div class="message ${msg.status}">
-          <div class="message-header">
-            <div class="message-meta">
-              <span class="message-player">${escapeHtml(msg.player_name)}</span>
-              <span class="message-uid">UID: ${escapeHtml(msg.uid)}</span>
-              <span class="message-source ${msg.sender_type}">${msg.sender_type === 'web' ? '🌐 Web' : '📱 TG'}</span>
-            </div>
-            <span class="message-status">${msg.status}</span>
-          </div>
-          <div class="message-body">
-            <div class="message-content">${escapeHtml(msg.message)}</div>
-            ${msg.contact_method ? `<div class="message-contact">📞 Contact: ${escapeHtml(msg.contact_method)}</div>` : ''}
-            ${msg.reply ? `<div class="message-reply"><div class="message-reply-label">💜 Aquilonia's Reply</div><div class="message-reply-content">${escapeHtml(msg.reply)}</div></div>` : ''}
-          </div>
-          <div class="message-footer">
-            <span class="message-time">${formatDate(msg.created_at)} • <span class="ref-id">#${msg.id}</span></span>
-            <div class="message-actions">
-              ${msg.status === 'pending' ? `<button class="btn btn-primary" onclick="openModal('${msg.id}', '${escapeHtml(msg.message)}')">💬 Reply</button>` : ''}
-            </div>
-          </div>
-        </div>
-      `).join('');
+      messagesList.innerHTML = filtered.map(msg => {
+        const esc = (t) => { const d = document.createElement('div'); d.textContent = t; return d.innerHTML; };
+        const date = new Date(msg.created_at);
+        const diff = Date.now() - date;
+        let timeAgo = 'Just now';
+        if (diff > 60000) timeAgo = Math.floor(diff / 60000) + 'm ago';
+        if (diff > 3600000) timeAgo = Math.floor(diff / 3600000) + 'h ago';
+        if (diff > 86400000) timeAgo = Math.floor(diff / 86400000) + 'd ago';
+
+        return '<div class="message ' + msg.status + '">' +
+          '<div class="message-header">' +
+            '<div class="message-meta">' +
+              '<span class="message-player">' + esc(msg.player_name) + '</span>' +
+              '<span class="message-uid">UID: ' + esc(msg.uid) + '</span>' +
+              '<span class="message-source ' + msg.sender_type + '">' + (msg.sender_type === 'web' ? 'Web' : 'TG') + '</span>' +
+            '</div>' +
+            '<span class="message-status">' + msg.status + '</span>' +
+          '</div>' +
+          '<div class="message-body">' +
+            '<div class="message-content">' + esc(msg.message) + '</div>' +
+            (msg.contact_method ? '<div class="message-contact">Contact: ' + esc(msg.contact_method) + '</div>' : '') +
+            (msg.reply ? '<div class="message-reply"><div class="message-reply-label">Aquilonia Reply</div><div class="message-reply-content">' + esc(msg.reply) + '</div></div>' : '') +
+          '</div>' +
+          '<div class="message-footer">' +
+            '<span class="message-time">' + timeAgo + ' • <span class="ref-id">#' + msg.id + '</span></span>' +
+            '<div class="message-actions">' +
+              (msg.status === 'pending' ? '<button class="btn btn-primary" data-id="' + msg.id + '" data-msg="' + esc(msg.message) + '">Reply</button>' : '') +
+            '</div>' +
+          '</div>' +
+        '</div>';
+      }).join('');
+
+      document.querySelectorAll('.message-actions .btn').forEach(btn => {
+        btn.addEventListener('click', () => {
+          openModal(btn.dataset.id, btn.dataset.msg);
+        });
+      });
     }
 
     document.querySelectorAll('.filter-btn').forEach(btn => {
@@ -599,9 +298,17 @@
       replyModal.classList.add('show');
     }
 
-    function closeModal() { replyModal.classList.remove('show'); currentReplyId = null; }
+    document.getElementById('closeModalBtn').addEventListener('click', () => {
+      replyModal.classList.remove('show');
+      currentReplyId = null;
+    });
 
-    async function sendReply() {
+    document.getElementById('cancelReplyBtn').addEventListener('click', () => {
+      replyModal.classList.remove('show');
+      currentReplyId = null;
+    });
+
+    document.getElementById('sendReplyBtn').addEventListener('click', async () => {
       if (!currentReplyId) return;
       const reply = document.getElementById('replyText').value.trim();
       if (!reply) { showToast('Please type a reply'); return; }
@@ -612,29 +319,20 @@
           body: JSON.stringify({ action: 'reply', token, msg_id: currentReplyId, reply })
         });
         const d = await r.json();
-        if (d.success) { closeModal(); showToast('Reply sent! 💜'); loadStats(); loadMessages(); }
-        else { showToast('Error sending reply'); }
+        if (d.success) {
+          replyModal.classList.remove('show');
+          showToast('Reply sent! Aquilonia is happy!');
+          loadStats();
+          loadMessages();
+        } else { showToast('Error sending reply'); }
       } catch (e) { showToast('Connection error'); }
-    }
+    });
 
     function showToast(msg) {
       const toast = document.getElementById('toast');
       document.getElementById('toastMessage').textContent = msg;
       toast.classList.add('show');
       setTimeout(() => toast.classList.remove('show'), 3000);
-    }
-
-    function escapeHtml(t) { const d = document.createElement('div'); d.textContent = t; return d.innerHTML; }
-
-    function formatDate(s) {
-      const d = new Date(s);
-      const now = new Date();
-      const diff = now - d;
-      if (diff < 60000) return 'Just now';
-      if (diff < 3600000) return Math.floor(diff / 60000) + 'm ago';
-      if (diff < 86400000) return Math.floor(diff / 3600000) + 'h ago';
-      if (diff < 604800000) return Math.floor(diff / 86400000) + 'd ago';
-      return d.toLocaleDateString('en-US', { month: 'short', day: 'numeric' });
     }
 
     init();
