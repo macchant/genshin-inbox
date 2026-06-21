@@ -1,0 +1,528 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Support - Aquilonia</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Quicksand:wght@400;500;600;700&family=Nunito:wght@400;600;700&display=swap" rel="stylesheet">
+  <style>
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+
+    :root {
+      --bg: #1a1a2e;
+      --bg-soft: #232342;
+      --card: #2a2a4a;
+      --accent: #5fb9b0;
+      --accent-light: #7dd3cb;
+      --gold: #e8c87a;
+      --pink: #e8a0bf;
+      --purple: #a78bfa;
+      --text: #f0f0f5;
+      --text-soft: #a0a0b5;
+    }
+
+    body {
+      font-family: 'Nunito', sans-serif;
+      background: var(--bg);
+      color: var(--text);
+      min-height: 100vh;
+      overflow: hidden;
+    }
+
+    /* Background Glow */
+    .bg-glow {
+      position: fixed;
+      inset: 0;
+      background:
+        radial-gradient(ellipse at 50% 40%, rgba(95, 185, 176, 0.12) 0%, transparent 50%),
+        radial-gradient(ellipse at 80% 80%, rgba(167, 139, 250, 0.1) 0%, transparent 50%);
+      pointer-events: none;
+      z-index: 0;
+    }
+
+    /* Floating Stars */
+    .stars {
+      position: fixed;
+      inset: 0;
+      pointer-events: none;
+      z-index: 0;
+    }
+    .star {
+      position: absolute;
+      width: 4px;
+      height: 4px;
+      background: var(--gold);
+      border-radius: 50%;
+      opacity: 0;
+      animation: twinkle 2s ease-in-out infinite;
+    }
+    @keyframes twinkle {
+      0%, 100% { opacity: 0; transform: scale(0); }
+      50% { opacity: 0.8; transform: scale(1); }
+    }
+
+    /* Main Container */
+    .container {
+      position: relative;
+      z-index: 1;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      min-height: 100vh;
+      padding: 2rem;
+    }
+
+    /* Mascot Container */
+    .mascot-container {
+      position: relative;
+      margin-bottom: 1.5rem;
+    }
+
+    /* Mascot */
+    .mascot {
+      width: 120px;
+      height: 120px;
+      position: relative;
+      animation: float 3s ease-in-out infinite;
+    }
+    @keyframes float {
+      0%, 100% { transform: translateY(0); }
+      50% { transform: translateY(-15px); }
+    }
+
+    /* Cat Face */
+    .cat-face {
+      width: 100%;
+      height: 100%;
+      background: linear-gradient(135deg, #2a2a4a 0%, #3d3d6b 100%);
+      border-radius: 50% 50% 45% 45%;
+      position: relative;
+      box-shadow:
+        0 10px 40px rgba(0,0,0,0.3),
+        inset 0 -10px 30px rgba(0,0,0,0.2),
+        0 0 60px rgba(95, 185, 176, 0.2);
+    }
+
+    /* Cat Ears */
+    .ear {
+      position: absolute;
+      width: 30px;
+      height: 35px;
+      background: linear-gradient(135deg, #2a2a4a 0%, #3d3d6b 100%);
+      top: -8px;
+      clip-path: polygon(50% 0%, 0% 100%, 100% 100%);
+    }
+    .ear::before {
+      content: '';
+      position: absolute;
+      width: 18px;
+      height: 20px;
+      background: rgba(232, 160, 191, 0.3);
+      top: 8px;
+      left: 6px;
+      clip-path: polygon(50% 0%, 0% 100%, 100% 100%);
+    }
+    .ear-left { left: 12px; transform: rotate(-15deg); }
+    .ear-right { right: 12px; transform: rotate(15deg); }
+
+    /* Cat Eyes */
+    .eyes {
+      position: absolute;
+      top: 38px;
+      left: 50%;
+      transform: translateX(-50%);
+      display: flex;
+      gap: 25px;
+    }
+    .eye {
+      width: 22px;
+      height: 26px;
+      background: var(--accent);
+      border-radius: 50%;
+      position: relative;
+      animation: blink 4s ease-in-out infinite;
+    }
+    .eye::before {
+      content: '';
+      position: absolute;
+      width: 10px;
+      height: 12px;
+      background: #1a1a2e;
+      border-radius: 50%;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+    }
+    .eye::after {
+      content: '';
+      position: absolute;
+      width: 5px;
+      height: 5px;
+      background: white;
+      border-radius: 50%;
+      top: 6px;
+      right: 4px;
+    }
+    @keyframes blink {
+      0%, 45%, 55%, 100% { transform: scaleY(1); }
+      50% { transform: scaleY(0.1); }
+    }
+
+    /* Cat Nose & Mouth */
+    .nose {
+      position: absolute;
+      top: 68px;
+      left: 50%;
+      transform: translateX(-50%);
+      width: 10px;
+      height: 8px;
+      background: var(--pink);
+      border-radius: 50% 50% 40% 40%;
+    }
+    .mouth {
+      position: absolute;
+      top: 75px;
+      left: 50%;
+      transform: translateX(-50%);
+      width: 20px;
+      height: 10px;
+    }
+    .mouth::before,
+    .mouth::after {
+      content: '';
+      position: absolute;
+      width: 12px;
+      height: 8px;
+      border: 2px solid var(--pink);
+      border-top: none;
+      border-radius: 0 0 50% 50%;
+    }
+    .mouth::before { left: -2px; }
+    .mouth::after { right: -2px; }
+
+    /* Cat Blush */
+    .blush {
+      position: absolute;
+      width: 18px;
+      height: 10px;
+      background: rgba(232, 160, 191, 0.4);
+      border-radius: 50%;
+      top: 60px;
+    }
+    .blush-left { left: 12px; }
+    .blush-right { right: 12px; }
+
+    /* Cat Whiskers */
+    .whiskers {
+      position: absolute;
+      top: 65px;
+      width: 100%;
+    }
+    .whisker {
+      position: absolute;
+      width: 25px;
+      height: 2px;
+      background: rgba(255,255,255,0.2);
+      border-radius: 2px;
+    }
+    .whisker-left-1 { left: -5px; top: 0; transform: rotate(-10deg); }
+    .whisker-left-2 { left: -8px; top: 8px; transform: rotate(0deg); }
+    .whisker-left-3 { left: -5px; top: 16px; transform: rotate(10deg); }
+    .whisker-right-1 { right: -5px; top: 0; transform: rotate(10deg); }
+    .whisker-right-2 { right: -8px; top: 8px; transform: rotate(0deg); }
+    .whisker-right-3 { right: -5px; top: 16px; transform: rotate(-10deg); }
+
+    /* Paw Wave */
+    .paw {
+      position: absolute;
+      right: -15px;
+      bottom: 25px;
+      width: 35px;
+      height: 35px;
+      animation: wave 1s ease-in-out infinite;
+      transform-origin: bottom left;
+    }
+    @keyframes wave {
+      0%, 100% { transform: rotate(-5deg); }
+      50% { transform: rotate(25deg); }
+    }
+    .paw-face {
+      width: 100%;
+      height: 100%;
+      background: linear-gradient(135deg, #2a2a4a 0%, #3d3d6b 100%);
+      border-radius: 50% 50% 45% 45%;
+      position: relative;
+    }
+    .paw-face::before {
+      content: '🐾';
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      font-size: 1.2rem;
+    }
+
+    /* Speech Bubble */
+    .speech-bubble {
+      position: absolute;
+      top: -60px;
+      left: 50%;
+      transform: translateX(-50%);
+      background: var(--card);
+      border: 1px solid rgba(255,255,255,0.1);
+      border-radius: 20px;
+      padding: 12px 20px;
+      white-space: nowrap;
+      box-shadow: 0 5px 20px rgba(0,0,0,0.2);
+      animation: bubble-pop 0.5s ease-out;
+    }
+    .speech-bubble::after {
+      content: '';
+      position: absolute;
+      bottom: -10px;
+      left: 50%;
+      transform: translateX(-50%);
+      border: 10px solid transparent;
+      border-top-color: var(--card);
+      border-bottom: none;
+    }
+    @keyframes bubble-pop {
+      0% { opacity: 0; transform: translateX(-50%) translateY(10px) scale(0.8); }
+      100% { opacity: 1; transform: translateX(-50%) translateY(0) scale(1); }
+    }
+    .speech-bubble span {
+      font-size: 0.85rem;
+      color: var(--text);
+    }
+
+    /* Hearts Float */
+    .hearts {
+      position: absolute;
+      top: 0;
+      left: 50%;
+      transform: translateX(-50%);
+      pointer-events: none;
+    }
+    .heart {
+      position: absolute;
+      font-size: 1rem;
+      opacity: 0;
+      animation: float-heart 2s ease-out infinite;
+    }
+    .heart:nth-child(1) { left: -30px; animation-delay: 0s; }
+    .heart:nth-child(2) { left: 0; animation-delay: 0.3s; }
+    .heart:nth-child(3) { left: 30px; animation-delay: 0.6s; }
+    @keyframes float-heart {
+      0% { opacity: 0; transform: translateY(0) scale(0); }
+      20% { opacity: 1; transform: translateY(-10px) scale(1); }
+      100% { opacity: 0; transform: translateY(-80px) scale(0.5); }
+    }
+
+    /* Status Badge */
+    .status-badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.5rem;
+      padding: 0.5rem 1rem;
+      background: rgba(95, 185, 176, 0.1);
+      border: 1px solid rgba(95, 185, 176, 0.3);
+      border-radius: 50px;
+      font-size: 0.8rem;
+      font-weight: 600;
+      color: var(--accent);
+      margin-bottom: 1rem;
+    }
+    .status-dot {
+      width: 8px;
+      height: 8px;
+      background: #4ade80;
+      border-radius: 50%;
+      animation: pulse 2s ease-in-out infinite;
+    }
+    @keyframes pulse {
+      0%, 100% { opacity: 1; box-shadow: 0 0 0 0 rgba(74, 222, 128, 0.5); }
+      50% { opacity: 0.8; box-shadow: 0 0 0 8px rgba(74, 222, 128, 0); }
+    }
+
+    /* Text Content */
+    .content {
+      text-align: center;
+      max-width: 400px;
+    }
+
+    .greeting {
+      font-family: 'Quicksand', sans-serif;
+      font-size: 1.8rem;
+      font-weight: 700;
+      margin-bottom: 0.5rem;
+      animation: fade-in 0.8s ease-out 0.3s backwards;
+    }
+    .greeting span {
+      background: linear-gradient(135deg, var(--accent), var(--purple));
+      -webkit-background-clip: text;
+      background-clip: text;
+      -webkit-text-fill-color: transparent;
+    }
+
+    .subtitle {
+      font-size: 1rem;
+      color: var(--text-soft);
+      margin-bottom: 2rem;
+      animation: fade-in 0.8s ease-out 0.5s backwards;
+    }
+    @keyframes fade-in {
+      0% { opacity: 0; transform: translateY(20px); }
+      100% { opacity: 1; transform: translateY(0); }
+    }
+
+    /* CTA Button */
+    .cta-btn {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.5rem;
+      padding: 1rem 2rem;
+      background: linear-gradient(135deg, var(--accent), var(--accent-light));
+      border: none;
+      border-radius: 50px;
+      color: var(--bg);
+      font-size: 1rem;
+      font-weight: 700;
+      font-family: inherit;
+      text-decoration: none;
+      cursor: pointer;
+      transition: all 0.3s;
+      animation: fade-in 0.8s ease-out 0.7s backwards;
+      box-shadow: 0 8px 30px rgba(95, 185, 176, 0.3);
+    }
+    .cta-btn:hover {
+      transform: translateY(-3px);
+      box-shadow: 0 12px 40px rgba(95, 185, 176, 0.5);
+    }
+
+    /* Skip Button */
+    .skip-btn {
+      margin-top: 1.5rem;
+      background: none;
+      border: none;
+      color: var(--text-soft);
+      font-size: 0.8rem;
+      cursor: pointer;
+      opacity: 0.6;
+      transition: opacity 0.2s;
+      animation: fade-in 0.8s ease-out 1s backwards;
+    }
+    .skip-btn:hover { opacity: 1; }
+
+    /* Responsive */
+    @media (max-width: 480px) {
+      .mascot { width: 100px; height: 100px; }
+      .speech-bubble { top: -50px; padding: 10px 16px; }
+      .speech-bubble span { font-size: 0.75rem; }
+      .greeting { font-size: 1.5rem; }
+    }
+  </style>
+</head>
+<body>
+  <div class="bg-glow"></div>
+
+  <!-- Floating Stars -->
+  <div class="stars">
+    <div class="star" style="top: 10%; left: 15%; animation-delay: 0s;"></div>
+    <div class="star" style="top: 20%; left: 80%; animation-delay: 0.5s;"></div>
+    <div class="star" style="top: 60%; left: 10%; animation-delay: 1s;"></div>
+    <div class="star" style="top: 70%; left: 85%; animation-delay: 1.5s;"></div>
+    <div class="star" style="top: 40%; left: 5%; animation-delay: 0.3s;"></div>
+    <div class="star" style="top: 85%; left: 70%; animation-delay: 0.8s;"></div>
+  </div>
+
+  <div class="container">
+    <!-- Status Badge -->
+    <div class="status-badge">
+      <div class="status-dot"></div>
+      Online | 5-15m response
+    </div>
+
+    <!-- Mascot -->
+    <div class="mascot-container">
+      <div class="hearts">
+        <div class="heart">💜</div>
+        <div class="heart">💜</div>
+        <div class="heart">💜</div>
+      </div>
+
+      <div class="speech-bubble">
+        <span>Hi there~ I'm Aquilonia 💜</span>
+      </div>
+
+      <div class="mascot">
+        <!-- Cat Ears -->
+        <div class="ear ear-left"></div>
+        <div class="ear ear-right"></div>
+
+        <!-- Cat Face -->
+        <div class="cat-face">
+          <!-- Eyes -->
+          <div class="eyes">
+            <div class="eye"></div>
+            <div class="eye"></div>
+          </div>
+
+          <!-- Blush -->
+          <div class="blush blush-left"></div>
+          <div class="blush blush-right"></div>
+
+          <!-- Nose -->
+          <div class="nose"></div>
+
+          <!-- Mouth -->
+          <div class="mouth"></div>
+
+          <!-- Whiskers -->
+          <div class="whiskers">
+            <div class="whisker whisker-left-1"></div>
+            <div class="whisker whisker-left-2"></div>
+            <div class="whisker whisker-left-3"></div>
+            <div class="whisker whisker-right-1"></div>
+            <div class="whisker whisker-right-2"></div>
+            <div class="whisker whisker-right-3"></div>
+          </div>
+        </div>
+
+        <!-- Waving Paw -->
+        <div class="paw">
+          <div class="paw-face"></div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Content -->
+    <div class="content">
+      <h1 class="greeting">Hey, Sry I'm <span>Offline~</span></h1>
+      <p class="subtitle">Drop your issue below and I'll reply soon 💜</p>
+
+      <a href="form.html" class="cta-btn">
+        ✨ Send a Message
+      </a>
+
+      <button class="skip-btn" onclick="location.href='form.html'">
+        Skip animation →
+      </button>
+    </div>
+  </div>
+
+  <script>
+    // Optional: Change greeting randomly
+    const greetings = [
+      "Hi there~ I'm Aquilonia 💜",
+      "Hey hey~ Need help? 💜",
+      "Yo! I'm here to help 💜",
+      "Welcome back~ 💜"
+    ];
+
+    // Uncomment to change greeting each load:
+    // document.querySelector('.speech-bubble span').textContent = greetings[Math.floor(Math.random() * greetings.length)];
+  </script>
+</body>
+</html>
